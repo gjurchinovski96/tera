@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="mk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tera Elements</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500&display=swap">
+<style>
+/* Layout: centered 1180px column; full-width colour bands (light / dark / grey) alternate down the home page, as in the Figma file.
+   Single light look on purpose: the brand design fixes its own light and dark bands. */
+:root{
+  --green:#8A9A48; --green-d:#76863A;
+  --ink:#141414; --ink-2:#1E1E1E;
+  --bg:#F5F5F5; --band:#E9E9E9; --paper:#FFFFFF;
+  --muted:#6F6F6F; --soft:#9A9A9A; --line:#D4D4D4; --dark-line:#3C3C3C;
+  --ph:#ECE8E2; --ph-ink:#A1978A; --star:#F2A81D;
+  --overlay:rgba(20,20,20,.45);
+  --f-body:"Montserrat",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --f-logo:"Cormorant Garamond","Didot","Bodoni 72",Georgia,serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+img{max-width:100%}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+h1,h2,h3{text-wrap:balance;margin:0}
+p{margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.caps{text-transform:uppercase;letter-spacing:.06em}
+
+/* announcement */
+.announce{background:var(--green);color:var(--paper);text-align:center;font-size:12px;font-weight:500;padding-block:8px}
+
+/* header */
+.hdr{background:var(--bg)}
+.hdr .wrap{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding-block:22px;gap:16px}
+.lang{display:flex;align-items:center;gap:10px;font-size:14px}
+.lang b{font-weight:700}
+.lang .sep{color:var(--soft)}
+.lang button{padding:2px 0}
+.nav{display:flex;align-items:center;gap:48px}
+.nav a{font-size:14px;letter-spacing:.06em;text-transform:uppercase;font-weight:400}
+.nav a.on{font-weight:700}
+.nav a:hover{color:var(--green-d)}
+.logo,.nav a.logo{font-family:var(--f-logo);font-size:42px;line-height:1;letter-spacing:.02em;padding-inline:8px;text-transform:none;font-weight:400}
+.logo img{height:38px;width:auto;display:block;max-width:none}
+.icons{display:flex;justify-content:flex-end;align-items:center;gap:20px}
+.icon-btn{position:relative;display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center}
+.icon-btn svg{width:24px;height:24px}
+.badge{position:absolute;top:-4px;right:-6px;min-width:16px;height:16px;border-radius:8px;background:var(--green);color:var(--paper);font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;padding-inline:4px}
+.badge[hidden]{display:none!important}
+.burger{display:none}
+.mnav{display:none}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-radius:6px;padding:11px 26px;transition:background .2s,color .2s,border-color .2s}
+.btn-dark{background:var(--ink);color:var(--paper)}
+.btn-dark:hover{background:#333}
+.btn-green{background:var(--green);color:var(--paper)}
+.btn-green:hover{background:var(--green-d)}
+.btn-line{border:1px solid var(--muted);background:var(--bg);color:var(--ink)}
+.btn-line:hover{background:var(--green);border-color:var(--green);color:var(--paper)}
+.btn-line-dark{border:1px solid #8a8a8a;color:var(--paper)}
+.btn-line-dark:hover{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.btn-block{width:100%}
+
+/* placeholders */
+.ph{background:var(--ph);color:var(--ph-ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;width:100%;height:100%;max-width:100%}
+.ph svg{width:34px;height:34px;opacity:.8}
+.ph.white{background:var(--paper)}
+.ph.white{background:linear-gradient(180deg,#fff,#f6f4f1)}
+.media{overflow:hidden;border-radius:12px;max-width:100%}
+.media img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* hero */
+.hero{background:linear-gradient(180deg,#F2F2F2,#E9E9E8)}
+.hero .wrap{display:flex;flex-direction:column;align-items:center;text-align:center;padding-block:56px 8px;gap:14px}
+.hero .hero-cta{padding-block:8px 64px}
+.hero h1{font-size:clamp(30px,4vw,44px);font-weight:500;letter-spacing:-.01em}
+.hero p{font-size:14px;color:#3b3b3b}
+.hero .media{width:100%;aspect-ratio:2.4/1;max-height:640px;border-radius:0}
+.hero .media img{object-position:50% 60%;mix-blend-mode:multiply}
+.hero .media{-webkit-mask-image:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent)}
+@media (max-width:640px){.hero .media{aspect-ratio:1.6/1}}
+
+/* sections */
+.band-dark{background:var(--ink);color:var(--paper)}
+.band-grey{background:var(--band)}
+.sec{padding-block:72px}
+.sec-title{text-align:center;font-size:15px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:44px}
+
+.best{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:860px;margin:0 auto}
+.best-card{display:flex;flex-direction:column;gap:18px;align-items:stretch;text-align:center}
+.best-card .media{position:relative;aspect-ratio:.88/1;border-radius:10px}
+.tag{position:absolute;top:14px;left:14px;background:var(--green);color:var(--paper);font-size:10px;font-weight:600;letter-spacing:.06em;padding:4px 10px;border-radius:4px;z-index:1}
+.best-card h3{font-size:16px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;max-width:880px;margin:0 auto;position:relative}
+.steps::before{content:"";position:absolute;top:17px;left:calc(16.66% + 18px);right:calc(16.66% + 18px);height:2px;background:var(--ink)}
+.step{display:flex;flex-direction:column;gap:12px;position:relative}
+.step .num{align-self:center;width:36px;height:36px;border-radius:5px;background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;margin-bottom:22px;font-variant-numeric:tabular-nums}
+.step h3{font-size:14px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.step p{font-size:13px;color:#3d3d3d;max-width:30ch}
+.steps-cta{display:flex;justify-content:center;margin-top:56px}
+
+.reviews-wrap{position:relative}
+.reviews{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.review{flex:0 1 380px;min-width:0;border:1px solid var(--dark-line);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:18px}
+.review-head{display:flex;gap:14px;align-items:center}
+.avatar{flex:none;width:64px;height:64px;border-radius:50%;border:2px solid var(--paper);display:flex;align-items:flex-end;justify-content:center;overflow:hidden;background:var(--paper)}
+.avatar svg{width:52px;height:52px;color:var(--ink)}
+.review-who{flex:1;min-width:0}
+.review-who b{display:block;font-size:16px;font-weight:600}
+.review-who span{display:block;font-size:12px;color:var(--soft)}
+.stars{display:flex;align-items:center;gap:3px;margin-top:4px;font-size:14px;color:var(--soft)}
+.stars svg{width:18px;height:18px;color:var(--star)}
+.quote{flex:none;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--paper);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:30px;line-height:1;padding-top:12px}
+.review p{font-size:14px;color:#d8d8d8}
+
+.totop{background:var(--paper);text-align:center}
+.totop button{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding-block:16px}
+.totop svg{width:16px;height:16px}
+
+/* footer */
+.ftr{background:var(--ink);color:var(--paper)}
+.ftr .wrap{padding-block:64px 48px}
+.ftr-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px}
+.ftr h4{margin:0 0 20px;font-size:16px;font-weight:600}
+.ftr p,.ftr a{font-size:15px;color:#e8e8e8}
+.ftr ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.ftr a:hover{color:var(--paper);text-decoration:underline}
+.copy{margin-top:56px;font-size:15px;color:#e8e8e8}
+
+/* shop */
+.shop{padding-block:40px 72px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px 18px}
+.card{display:flex;flex-direction:column;gap:12px}
+.card .media{aspect-ratio:.88/1;border-radius:6px;display:block;position:relative;background:var(--paper)}
+.card .media .alt{position:absolute;inset:0;opacity:0;transition:opacity .35s}
+.card:hover .media .alt,.card .media:focus-visible .alt{opacity:1}
+.card:hover .btn-line{background:var(--green);border-color:var(--green);color:var(--paper)}
+.card-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.card-row b{font-size:16px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.card-row span{font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.card .btn{font-size:11px;padding-block:9px;border-color:#9a9a9a;background:#F0F0F0}
+.card .btn:hover{background:var(--green);border-color:var(--green)}
+
+/* product */
+.crumbs{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--muted);padding-top:36px}
+.crumbs a:hover{color:var(--ink)}
+.crumbs .sep{color:var(--soft)}
+.pdp{display:grid;grid-template-columns:minmax(0,480px) minmax(0,1fr);gap:clamp(32px,7vw,88px);padding-block:32px 96px;align-items:start}
+.gallery{display:flex;flex-direction:column;gap:20px}
+.gallery .main{aspect-ratio:.885/1;border-radius:14px}
+.thumbs{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.thumbs button{aspect-ratio:1/1;border-radius:14px;overflow:hidden;border:1px solid var(--line);padding:0}
+.thumbs button:hover{border-color:var(--ink)}
+.info{display:flex;flex-direction:column;min-width:0}
+.info h1{font-size:clamp(30px,3.4vw,40px);font-weight:600;letter-spacing:-.01em;line-height:1.15}
+.info h2{font-size:clamp(20px,2.3vw,28px);font-weight:600;letter-spacing:-.01em;margin-top:6px}
+.desc{margin-top:22px;color:var(--muted);font-size:16px;max-width:62ch}
+.specs{margin-top:22px;font-size:16px;max-width:62ch}
+.specs div{margin:0}
+.specs b{font-weight:700}
+.price{margin-top:44px;font-size:clamp(22px,2.4vw,28px);font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.buy{display:grid;grid-template-columns:230px 1fr;gap:20px;margin-top:40px}
+.qty{display:flex;align-items:center;justify-content:center;gap:18px;border:1px solid var(--muted);border-radius:6px;background:var(--bg);font-size:20px;min-height:52px}
+.qty button{width:32px;height:32px;font-size:20px;line-height:1;border-radius:4px}
+.qty button:hover{background:var(--band)}
+.qty output{min-width:22px;text-align:center;font-variant-numeric:tabular-nums}
+.buy .btn{font-size:16px;min-height:52px}
+.notes{margin-top:56px;display:flex;flex-direction:column;gap:20px;font-size:13px;color:var(--muted);max-width:80ch}
+.notes b{font-weight:700;color:#555}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:var(--overlay);z-index:40;opacity:0;pointer-events:none;transition:opacity .25s}
+.scrim.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(650px,100%);background:var(--paper);z-index:41;transform:translateX(100%);transition:transform .3s ease;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-right:env(safe-area-inset-right,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.drawer.open{transform:none}
+.drawer-head{display:flex;justify-content:space-between;align-items:center;padding:34px 40px 22px 42px;border-bottom:1.5px solid var(--line)}
+.drawer-head h2{font-size:28px;font-weight:600}
+.x{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--soft);color:var(--soft);display:flex;align-items:center;justify-content:center}
+.x:hover{color:var(--ink);border-color:var(--ink)}
+.x svg{width:14px;height:14px}
+.drawer-body{flex:1;overflow:auto;padding:44px 42px;display:flex;flex-direction:column;gap:28px}
+.line{display:grid;grid-template-columns:188px 1fr;gap:34px;align-items:start}
+.line .media{aspect-ratio:.88/1;border:1px solid var(--line);border-radius:10px}
+.line h3{font-size:26px;font-weight:600;line-height:1.2}
+.line h4{margin:2px 0 0;font-size:18px;font-weight:600}
+.line .meta{margin-top:12px;font-size:13px;color:var(--soft)}
+.line .lp{margin-top:14px;font-size:17px;font-variant-numeric:tabular-nums}
+.line-ctrl{display:flex;align-items:center;gap:16px;margin-top:14px;flex-wrap:wrap}
+.line .qty{min-height:36px;width:158px;font-size:15px;gap:12px}
+.line .qty button{font-size:16px;width:26px;height:26px}
+.rm{font-size:12px;color:var(--muted);text-decoration:underline}
+.rm:hover{color:var(--ink)}
+.ship{font-size:13px;color:var(--muted)}
+.bar{height:4px;border-radius:2px;background:var(--band);margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--green);transition:width .3s}
+.sum{display:flex;justify-content:space-between;font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
+.drawer .btn-green{font-size:14px;min-height:48px}
+.empty{color:var(--muted);text-align:center;padding-block:40px;display:flex;flex-direction:column;gap:20px;align-items:center}
+
+/* checkout */
+.co{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:48px;padding-block:40px 96px;align-items:start}
+.co h1{font-size:32px;font-weight:600;margin-bottom:28px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fld{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fld.full{grid-column:1/-1}
+.fld label{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.fld input,.fld textarea{font:inherit;font-size:15px;padding:12px 14px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);width:100%}
+.fld input:focus,.fld textarea:focus{border-color:var(--ink);outline:none}
+.fld .err{font-size:12px;color:#B3261E;min-height:0}
+.pay{grid-column:1/-1;border:1px solid var(--line);border-radius:8px;padding:16px;background:var(--paper);display:flex;gap:12px;align-items:center;font-size:14px}
+.pay .dot{width:16px;height:16px;border-radius:50%;border:5px solid var(--ink);flex:none}
+.summary{background:var(--paper);border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:18px}
+.summary h2{font-size:18px;font-weight:600}
+.sline{display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;font-size:14px}
+.sline .media{aspect-ratio:.88/1;border-radius:6px;border:1px solid var(--line)}
+.sline b{display:block;font-weight:600}
+.sline span{color:var(--muted);font-size:13px}
+.srow{display:flex;justify-content:space-between;font-size:14px;font-variant-numeric:tabular-nums}
+.srow.total{font-size:18px;font-weight:700;border-top:1px solid var(--line);padding-top:16px}
+
+/* modal + toast */
+.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-left,0px));background:var(--overlay)}
+.modal-card{background:var(--band);border-radius:10px;max-width:460px;width:100%;padding:40px 32px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px}
+.modal-card .ok{width:56px;height:56px;border-radius:50%;border:2px solid var(--green);color:var(--green);display:flex;align-items:center;justify-content:center}
+.modal-card .ok svg{width:26px;height:26px}
+.modal-card p{font-size:14px;color:var(--muted)}
+.modal-card h3{font-size:20px;font-weight:600}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:8px;font-size:13px;z-index:60;opacity:0;pointer-events:none;transition:.25s;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* simple pages */
+.page{padding-block:56px 96px;max-width:720px}
+.page h1{font-size:36px;font-weight:600;margin-bottom:20px}
+.page p{font-size:16px;color:var(--muted);margin-bottom:14px}
+.page .todo{border:1px dashed var(--ph-ink);background:var(--ph);color:#6c6359;border-radius:8px;padding:14px 16px;font-size:13px}
+.contact-list{display:grid;gap:14px;margin-top:24px}
+.contact-list div{background:var(--paper);border-radius:10px;padding:16px 18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.contact-list b{font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.contact-list div{align-items:center}
+.cval{display:flex;align-items:center;gap:12px;flex-wrap:wrap;user-select:text}
+.cval a{font-weight:500;text-decoration:underline;text-underline-offset:3px}
+.cval a:hover{color:var(--green-d)}
+.copybtn{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line);border-radius:4px;padding:4px 10px}
+.copybtn:hover{border-color:var(--ink)}
+
+/* responsive */
+@media (max-width:960px){
+  .nav{gap:24px}
+}
+@media (max-width:860px){
+  .hdr .wrap{grid-template-columns:auto 1fr auto;padding-block:16px}
+  .nav{display:none}
+  .burger{display:inline-flex}
+  .lang{display:none}
+  .hdr .wrap{position:relative;grid-template-columns:auto 1fr}
+  .brand-mid{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+  .mnav{display:block;background:var(--bg);border-top:1px solid var(--line)}
+  .mnav[hidden]{display:none!important}
+  .mnav .wrap{display:flex;flex-direction:column;padding-block:8px 16px}
+  .mnav a{padding-block:12px;text-transform:uppercase;letter-spacing:.06em;font-size:14px;border-bottom:1px solid var(--band)}
+  .mnav a.on{font-weight:700}
+  .mnav .lang{display:flex;padding-top:14px}
+  .best{grid-template-columns:1fr;max-width:380px}
+  .steps{grid-template-columns:1fr;gap:28px;max-width:380px}
+  .steps::before{display:none}
+  .step{align-items:center;text-align:center}
+  .step .num{margin-bottom:4px}
+  .grid{grid-template-columns:repeat(2,1fr);gap:28px 14px}
+  .pdp{grid-template-columns:1fr}
+  .co{grid-template-columns:1fr}
+  .ftr-grid{grid-template-columns:1fr 1fr}
+  .ftr-grid > div:first-child{grid-column:1/-1}
+}
+@media (max-width:520px){
+  .logo{font-size:36px}
+  .logo img{height:30px}
+  .buy{grid-template-columns:1fr}
+  .drawer-head{padding:24px 20px 16px}
+  .drawer-body{padding:24px 20px}
+  .line{grid-template-columns:110px 1fr;gap:16px}
+  .line h3{font-size:20px}
+  .line h4{font-size:15px}
+  .form{grid-template-columns:1fr}
+  .card-row{flex-direction:column;gap:2px}
+  .card .btn{padding-inline:8px}
+  .ftr-grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="announce caps">Бесплатна достава над 3.000 МКД</div>
+
+<header class="hdr">
+  <div class="wrap">
+    <div class="lang" aria-label="Јазик">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5c2.6 2.8 3.9 6 3.9 9.5s-1.3 6.7-3.9 9.5c-2.6-2.8-3.9-6-3.9-9.5S9.4 5.3 12 2.5Z"/></svg>
+      <b>МК</b><span class="sep">|</span><button type="button" data-en>EN</button>
+    </div>
+    <button class="burger icon-btn" type="button" id="burger" aria-label="Мени" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <nav class="nav" aria-label="Главна навигација">
+      <a href="#home" data-r="home">Почетна</a>
+      <a href="#shop" data-r="shop">Продавница</a>
+      <a href="#home" class="logo" aria-label="Tera – почетна"><img src="img/logo.png" alt="tera"></a>
+      <a href="#contact" data-r="contact">Контакт</a>
+      <a href="#about" data-r="about">За нас</a>
+    </nav>
+    <div class="icons">
+      <a href="#home" class="logo brand-mid" style="display:none" id="mlogo" aria-label="Tera – почетна"><img src="img/logo.png" alt="tera"></a>
+      <a class="icon-btn" href="https://www.instagram.com/tera.elements/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <button class="icon-btn" type="button" id="cartBtn" aria-label="Кошничка">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3.5 7.5h17l-1.3 14H4.8L3.5 7.5Z"/><path d="M8.5 7.5V6a3.5 3.5 0 0 1 7 0v1.5"/></svg>
+        <span class="badge" id="badge" hidden>0</span>
+      </button>
+    </div>
+  </div>
+  <div class="mnav" id="mnav" hidden>
+    <div class="wrap">
+      <a href="#home" data-r="home">Почетна</a>
+      <a href="#shop" data-r="shop">Продавница</a>
+      <a href="#contact" data-r="contact">Контакт</a>
+      <a href="#about" data-r="about">За нас</a>
+      <div class="lang"><b>МК</b><span class="sep">|</span><button type="button" data-en>EN</button></div>
+    </div>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<div class="totop"><button type="button" id="toTop">Врати се на почеток
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 15 6-6 6 6"/></svg></button></div>
+
+<footer class="ftr">
+  <div class="wrap">
+    <div class="ftr-grid">
+      <div><h4>Tera Elements</h4><p>Современ дизајн. Намерни детали.<br>Безвременско присуство.</p></div>
+      <div><h4>Компанија</h4><ul><li><a href="#about">За Нас</a></li></ul></div>
+      <div><h4>Поддршка</h4><ul><li><a href="#contact">Контактирај нè</a></li></ul></div>
+    </div>
+    <p class="copy">© 2026 Tera Elements. Сите права задржани.</p>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Кошничка" aria-hidden="true">
+  <div class="drawer-head"><h2>Кошничка</h2>
+    <button class="x" type="button" id="closeCart" aria-label="Затвори"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="drawer-body" id="cartBody"></div>
+</aside>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ---------- DATA (edit here; add image URLs to `images` later) ---------- */
+const FREE_SHIPPING = 3000;
+const SHIPPING_FEE = 150; // placeholder – confirm real delivery price
+const BASE = {
+  name:'Нома', subtitle:'Премиум даска за сервирање', price:2500,
+  material:'Орев', dims:'16 x 35 x 2 cm', lead:'14 дена',
+  desc:['Подигнете го нивото на вашето послужување.','Нашата даска од орев се одликува со робустен квалитет и префинет дизајн. Со својата уникатна текстура и впечатлива рачка, таа е идеален подарок за љубителите на храна или совршен додаток за вашиот дом. Издржлива, елегантна и безвременска.'],
+  care:'Се мие рачно со млака вода. За да го зачува сјајот, препорачуваме повремено премачкување со минерално масло или восок за дрво.',
+  images:[] // e.g. ['img/noma-1.jpg','img/noma-2.jpg','img/noma-3.jpg']
+};
+const PRODUCTS = [
+  {...BASE,id:'noma',images:['img/noma-1.jpg','img/noma-2.jpg']},
+  {...BASE,id:'ring',name:'Даска со прстен',dims:'',images:['img/ring-1.jpg','img/ring-2.jpg']}, // temporary name – replace
+  {...BASE,id:'round',name:'Тркалезна даска',dims:'',images:['img/round-1.jpg']}            // temporary name – replace
+];
+const HERO_IMG = 'img/hero.jpg';
+// which photo each bestseller card shows (index into that product's images)
+const BESTSELLERS = [{id:'noma',img:0},{id:'round',img:0},{id:'ring',img:0}];
+const REVIEWS = [
+  {name:'Теодора',role:'CEO, Brand Owner',text:'Даската е феноменална. Ја искористивме неколку пати до сега, преубаво изгледа. Исто така, многу сме задоволни од квалитетот на дрвото. Ви благодарам.'},
+  {name:'Александра',role:'CEO, Experience App',text:'Од толку што е убава даската, ми стои како декорација во кујната. Жал ми е да ја искористам.'}
+];
+
+/* ---------- helpers ---------- */
+const $ = s=>document.querySelector(s);
+const fmt = n=>n.toLocaleString('de-DE')+' МКД';
+const byId = id=>PRODUCTS.find(p=>p.id===id);
+const ICON_IMG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m3 17 5-5 4 4 3-3 6 6"/></svg>';
+function img(p,i,label,cls=''){
+  const src=p&&p.images&&p.images[i];
+  if(src) return `<img src="${src}" alt="${p.name}">`;
+  return `<div class="ph ${cls}">${ICON_IMG}<span>${label||'Слика'}</span></div>`;
+}
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let tt; function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2400)}
+
+/* ---------- cart ---------- */
+let cart=[];
+try{cart=JSON.parse(localStorage.getItem('tera-cart')||'[]').filter(l=>byId(l.id))}catch(e){cart=[]}
+function save(){try{localStorage.setItem('tera-cart',JSON.stringify(cart))}catch(e){}}
+const count=()=>cart.reduce((a,l)=>a+l.qty,0);
+const subtotal=()=>cart.reduce((a,l)=>a+l.qty*byId(l.id).price,0);
+function add(id,qty){const l=cart.find(x=>x.id===id);if(l)l.qty+=qty;else cart.push({id,qty});save();renderCart();}
+function setQty(id,q){const l=cart.find(x=>x.id===id);if(!l)return;l.qty=Math.max(1,Math.min(99,q));save();renderCart();if(route().name==='checkout')renderView()}
+function remove(id){cart=cart.filter(x=>x.id!==id);save();renderCart();if(route().name==='checkout')renderView()}
+
+function renderCart(){
+  const n=count(), b=$('#badge'); b.textContent=n; b.hidden=n===0;
+  const body=$('#cartBody');
+  if(!cart.length){body.innerHTML=`<div class="empty"><p>Вашата кошничка е празна.</p><a class="btn btn-dark" href="#shop" data-close>Кон продавницата</a></div>`;return}
+  const st=subtotal(), left=FREE_SHIPPING-st;
+  body.innerHTML = cart.map(l=>{const p=byId(l.id);return `
+    <div class="line">
+      <div class="media">${img(p,0,'Слика','white')}</div>
+      <div>
+        <h3>${esc(p.name)}</h3><h4>${esc(p.subtitle)}</h4>
+        <div class="meta">Материјал: ${esc(p.material)}${p.dims?`<br>Димензии: ${esc(p.dims)}`:''}</div>
+        <div class="lp">${fmt(p.price)}</div>
+        <div class="line-ctrl">
+          <div class="qty"><button type="button" data-dec="${p.id}" aria-label="Намали">-</button><output>${l.qty}</output><button type="button" data-inc="${p.id}" aria-label="Зголеми">+</button></div>
+          <button class="rm" type="button" data-rm="${p.id}">Отстрани</button>
+        </div>
+      </div>
+    </div>`}).join('') + `
+    <div>
+      <div class="ship">${left>0?`Уште ${fmt(left)} до бесплатна достава.`:'Имате бесплатна достава.'}</div>
+      <div class="bar"><i style="width:${Math.min(100,st/FREE_SHIPPING*100)}%"></i></div>
+    </div>
+    <div class="sum"><span>Вкупно</span><span>${fmt(st)}</span></div>
+    <a class="btn btn-green btn-block" href="#checkout" data-close>Нарачај</a>`;
+}
+function openCart(){$('#drawer').classList.add('open');$('#scrim').classList.add('open');$('#drawer').setAttribute('aria-hidden','false');$('#closeCart').focus()}
+function closeCart(){$('#drawer').classList.remove('open');$('#scrim').classList.remove('open');$('#drawer').setAttribute('aria-hidden','true')}
+
+/* ---------- views ---------- */
+function route(){
+  const h=(location.hash||'#home').slice(1);
+  if(h.startsWith('product-')) return {name:'product',id:h.slice(8)};
+  return {name:['home','shop','checkout','contact','about'].includes(h)?h:'home'};
+}
+const stars='<svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2.8 2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9L12 2.8Z"/></svg>';
+const person='<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4.5"/><path d="M2.5 24c0-5.5 4.3-9 9.5-9s9.5 3.5 9.5 9Z"/></svg>';
+
+const VIEWS={
+home:()=>`
+  <section class="hero"><div class="wrap">
+    <h1>Сервирај со стил.</h1>
+    <p>Премиум даски дизајнирани за Вашите најважни моменти.</p>
+  </div>
+  <div class="media hero-img"><img src="${HERO_IMG}" alt="Тера даска од орев со сирење, грозје и леб"></div>
+  <div class="wrap hero-cta"><a class="btn btn-dark" href="#shop">Откријте ја колекцијата</a></div>
+  </section>
+
+  <section class="band-dark sec"><div class="wrap">
+    <h2 class="sec-title">Најпродавани</h2>
+    <div class="best">${BESTSELLERS.map((b,i)=>{const p=byId(b.id);return `
+      <div class="best-card">
+        <a class="media" href="#product-${p.id}"><span class="tag">BESTSELLER</span>${img(p,b.img,'Слика на производ','white')}</a>
+        <h3>${esc(p.name)}</h3>
+        <a class="btn btn-line-dark" href="#product-${p.id}">Види производ</a>
+      </div>`}).join('')}</div>
+  </div></section>
+
+  <section class="band-grey sec"><div class="wrap">
+    <h2 class="sec-title">3 едноставни чекори до твојата омилена Tera даска</h2>
+    <div class="steps">
+      <div class="step"><span class="num">01</span><h3>Избери модел</h3><p>Разгледај ја понудата и одбери ја даската што најмногу ти одговара.</p></div>
+      <div class="step"><span class="num">02</span><h3>Направи нарачка</h3><p>Внесете ги деталите за достава на Вашата нова Tera даска.</p></div>
+      <div class="step"><span class="num">03</span><h3>Очекувај достава</h3><p>Ние ја изработуваме со внимание и ти ја испраќаме директно до врата.</p></div>
+    </div>
+    <div class="steps-cta"><a class="btn btn-dark" href="#shop">Откријте ја колекцијата</a></div>
+  </div></section>
+
+  <section class="band-dark sec"><div class="wrap">
+    <h2 class="sec-title" style="font-size:20px">Што кажуваат<br>нашите среќни клиенти</h2>
+    <div class="reviews">${REVIEWS.map(r=>`
+      <article class="review">
+        <div class="review-head">
+          <div class="avatar">${person}</div>
+          <div class="review-who"><b>${esc(r.name)}</b><span>${esc(r.role)}</span>
+            <div class="stars">${stars.repeat(5)}<span style="margin-left:4px">5.0</span></div></div>
+          <div class="quote" aria-hidden="true">“</div>
+        </div>
+        <p>${esc(r.text)}</p>
+      </article>`).join('')}</div>
+  </div></section>`,
+
+shop:()=>`
+  <section class="shop"><div class="wrap"><div class="grid">${PRODUCTS.map(p=>`
+    <div class="card">
+      <a class="media${p.images[1]?' has-alt':''}" href="#product-${p.id}">${img(p,0,'Слика на производ','white')}${p.images[1]?`<img class="alt" src="${p.images[1]}" alt="" loading="lazy">`:''}</a>
+      <div class="card-row"><b>${esc(p.name)}</b><span>${fmt(p.price)}</span></div>
+      <a class="btn btn-line" href="#product-${p.id}">Види производ</a>
+    </div>`).join('')}</div></div></section>`,
+
+product:(r)=>{const p=byId(r.id); if(!p) return VIEWS.shop();
+  return `<div class="wrap">
+  <nav class="crumbs" aria-label="Патека"><a href="#home">Почетна</a><span class="sep">›</span><a href="#shop">Продавница</a><span class="sep">›</span><span>Даски за сервирање</span><span class="sep">›</span><span>${esc(p.name)}</span></nav>
+  <section class="pdp">
+    <div class="gallery">
+      <div class="media main" id="mainImg" data-i="0">${img(p,0,'Слика 1','white')}</div>
+      ${p.images.length>1?`<div class="thumbs">${p.images.slice(1).map((_,k)=>`<button type="button" data-thumb="${k+1}" aria-label="Прикажи слика ${k+2}">${img(p,k+1,'Слика','white')}</button>`).join('')}</div>`:''}
+    </div>
+    <div class="info">
+      <h1>${esc(p.name)}</h1>
+      <h2>${esc(p.subtitle)}</h2>
+      <div class="desc">${p.desc.map(esc).join('<br>')}</div>
+      <div class="specs">
+        <div><b>Материјал:</b> ${esc(p.material)}</div>
+        ${p.dims?`<div><b>Димензии:</b> ${esc(p.dims)}</div>`:''}
+        <div><b>Рок на испорака:</b> ${esc(p.lead)}</div>
+        <div><b>Одржување:</b> ${esc(p.care)}</div>
+      </div>
+      <div class="price">Цена: ${fmt(p.price)}</div>
+      <div class="buy">
+        <div class="qty"><button type="button" id="pDec" aria-label="Намали">-</button><output id="pQty">1</output><button type="button" id="pInc" aria-label="Зголеми">+</button></div>
+        <button class="btn btn-dark" type="button" id="addBtn" data-id="${p.id}">Додади во кошничка</button>
+      </div>
+      <div class="notes">
+        <p><b>Важна напомена за производот:</b> Tera даските се изработени од 100% природен орев. Бидејќи не постојат две исти дрвја во природата, не постојат ни две исти даски. Вашето парче може благо да се разликува во нијансата и шарите од прикажаната слика, што го прави единствено и само ваше.</p>
+        <p><b>Внимание:</b> Ова е природен производ. За да се зачува неговиот квалитет, НЕ го мијте во машина за садови и не го оставајте потопен во вода. Неправилното одржување може да доведе до виткање или пукање на дрвото, за што не сносиме одговорност.</p>
+      </div>
+    </div>
+  </section></div>`},
+
+checkout:()=>{
+  if(!cart.length) return `<div class="wrap page"><h1>Нарачка</h1><p>Вашата кошничка е празна.</p><a class="btn btn-dark" href="#shop">Кон продавницата</a></div>`;
+  const st=subtotal(), ship=st>=FREE_SHIPPING?0:SHIPPING_FEE;
+  return `<div class="wrap"><section class="co">
+    <div>
+      <h1>Нарачка</h1>
+      <form class="form" id="coForm" novalidate>
+        <div class="fld"><label for="f-name">Име и презиме</label><input id="f-name" name="name" required autocomplete="name"><span class="err"></span></div>
+        <div class="fld"><label for="f-phone">Телефон</label><input id="f-phone" name="phone" required inputmode="tel" autocomplete="tel" placeholder="07X XXX XXX"><span class="err"></span></div>
+        <div class="fld full"><label for="f-email">Е-пошта</label><input id="f-email" name="email" type="email" autocomplete="email"><span class="err"></span></div>
+        <div class="fld full"><label for="f-addr">Адреса</label><input id="f-addr" name="addr" required autocomplete="street-address"><span class="err"></span></div>
+        <div class="fld"><label for="f-city">Град</label><input id="f-city" name="city" required autocomplete="address-level2"><span class="err"></span></div>
+        <div class="fld"><label for="f-zip">Поштенски број</label><input id="f-zip" name="zip" inputmode="numeric" autocomplete="postal-code"><span class="err"></span></div>
+        <div class="fld full"><label for="f-note">Забелешка (опционално)</label><textarea id="f-note" name="note" rows="3"></textarea></div>
+        <div class="pay"><span class="dot"></span>Плаќање во готово при достава</div>
+        <div class="fld full"><button class="btn btn-green btn-block" type="submit" style="min-height:50px;font-size:14px">Потврди нарачка</button></div>
+      </form>
+    </div>
+    <aside class="summary">
+      <h2>Преглед на кошничка</h2>
+      ${cart.map(l=>{const p=byId(l.id);return `<div class="sline"><div class="media">${img(p,0,'','white')}</div><div><b>${esc(p.name)}</b><span>${l.qty} × ${fmt(p.price)}</span></div><div>${fmt(p.price*l.qty)}</div></div>`}).join('')}
+      <div class="srow"><span>Меѓузбир</span><span>${fmt(st)}</span></div>
+      <div class="srow"><span>Достава</span><span>${ship?fmt(ship):'Бесплатна'}</span></div>
+      <div class="srow total"><span>Вкупно</span><span>${fmt(st+ship)}</span></div>
+    </aside>
+  </section></div>`},
+
+contact:()=>`<div class="wrap page"><h1>Контакт</h1>
+  <p>Имате прашање за некоја даска или за вашата нарачка? Слободно контактирајте нè.</p>
+  <div class="contact-list">
+    <div><b>Е-пошта</b><span class="cval"><a href="mailto:elements.tera@gmail.com">elements.tera@gmail.com</a></span></div>
+    <div><b>Телефон</b><span class="cval"><a href="tel:+38970913115">+389 70 913 115</a></span></div>
+    <div><b>Instagram</b><span class="cval"><a href="https://www.instagram.com/tera.elements/" target="_blank" rel="noopener">@tera.elements</a></span></div>
+  </div></div>`,
+
+about:()=>`<div class="wrap page"><h1>За нас</h1>
+  <p>Tera Elements. Современ дизајн. Намерни детали. Безвременско присуство.</p>
+  <p class="todo">Тука оди текстот за брендот. Оваа страница не постои во Figma дизајнот, па е оставена како простор за содржина.</p></div>`,
+};
+
+function renderView(){
+  const r=route();
+  $('#app').innerHTML=VIEWS[r.name](r);
+  document.querySelectorAll('[data-r]').forEach(a=>a.classList.toggle('on',a.dataset.r===(r.name==='product'?'shop':r.name)));
+  if(r.name==='product') bindProduct();
+  if(r.name==='checkout'&&cart.length) bindCheckout();
+}
+function bindProduct(){
+  let q=1; const out=$('#pQty');
+  $('#pDec').onclick=()=>{q=Math.max(1,q-1);out.textContent=q};
+  $('#pInc').onclick=()=>{q=Math.min(99,q+1);out.textContent=q};
+  $('#addBtn').onclick=e=>{add(e.currentTarget.dataset.id,q);openCart()};
+  document.querySelectorAll('[data-thumb]').forEach(b=>b.onclick=()=>{
+    const main=$('#mainImg'); const tmp=main.innerHTML; main.innerHTML=b.innerHTML; b.innerHTML=tmp;
+  });
+}
+function bindCheckout(){
+  const f=$('#coForm');
+  f.addEventListener('submit',e=>{
+    e.preventDefault(); let ok=true;
+    f.querySelectorAll('.fld').forEach(d=>{const i=d.querySelector('input');const er=d.querySelector('.err');if(!i||!er)return;
+      let m='';
+      if(i.required&&!i.value.trim()) m='Пополнете го ова поле.';
+      else if(i.name==='phone'&&i.value.replace(/\D/g,'').length<8) m='Внесете валиден телефонски број.';
+      else if(i.type==='email'&&i.value&&!/^\S+@\S+\.\S+$/.test(i.value)) m='Внесете валидна е-пошта.';
+      er.textContent=m; if(m){ok=false}});
+    if(!ok){f.querySelector('.err:not(:empty)')?.previousElementSibling?.focus();return}
+    cart=[];save();renderCart();showDone();
+  });
+}
+function showDone(){
+  const m=document.createElement('div');m.className='modal';m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');
+  m.innerHTML=`<div class="modal-card"><div class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
+    <h3>Ви благодариме!</h3><p>Вашата нарачка е примена. Ќе ве контактираме за потврда.</p>
+    <a class="btn btn-dark" href="#shop" id="doneBtn">Назад кон продавницата</a></div>`;
+  document.body.appendChild(m); $('#doneBtn').focus();
+  $('#doneBtn').onclick=()=>m.remove();
+}
+
+/* ---------- global events ---------- */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button,a'); if(!t) return;
+  if(t.dataset.inc){const l=cart.find(x=>x.id===t.dataset.inc);setQty(l.id,l.qty+1)}
+  if(t.dataset.dec){const l=cart.find(x=>x.id===t.dataset.dec);setQty(l.id,l.qty-1)}
+  if(t.dataset.rm) remove(t.dataset.rm);
+  if(t.hasAttribute('data-close')) closeCart();
+  if(t.hasAttribute('data-en')) toast('Англиската верзија наскоро.');
+  if(t.dataset.copy){const v=t.dataset.copy;try{navigator.clipboard.writeText(v).then(()=>toast('Копирано: '+v),()=>toast(v))}catch(err){toast(v)}}
+});
+$('#cartBtn').onclick=openCart;
+$('#closeCart').onclick=closeCart;
+$('#scrim').onclick=closeCart;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCart();document.querySelector('.modal')?.remove()}});
+$('#toTop').onclick=()=>window.scrollTo({top:0});
+$('#burger').onclick=()=>{const m=$('#mnav');m.hidden=!m.hidden;$('#burger').setAttribute('aria-expanded',String(!m.hidden))};
+const mq=matchMedia('(max-width:860px)');
+function syncLogo(){$('#mlogo').style.display=mq.matches?'':'none'}
+mq.addEventListener('change',syncLogo);syncLogo();
+window.addEventListener('hashchange',()=>{$('#mnav').hidden=true;renderView();window.scrollTo({top:0})});
+renderView();renderCart();
+</script>
+
+</body>
+</html>

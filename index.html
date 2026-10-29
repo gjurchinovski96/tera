@@ -44,6 +44,7 @@ p{margin:0}
 .lang b{font-weight:700}
 .lang .sep{color:var(--soft)}
 .lang button{padding:2px 0}
+.lang button.on{font-weight:700}
 .nav{display:flex;align-items:center;gap:48px}
 .nav a{font-size:14px;letter-spacing:.06em;text-transform:uppercase;font-weight:400}
 .nav a.on{font-weight:700}
@@ -99,6 +100,7 @@ p{margin:0}
 .best-card{display:flex;flex-direction:column;gap:18px;align-items:stretch;text-align:center}
 .best-card .media{position:relative;aspect-ratio:.88/1;border-radius:10px}
 .tag{position:absolute;top:14px;left:14px;background:var(--green);color:var(--paper);font-size:10px;font-weight:600;letter-spacing:.06em;padding:4px 10px;border-radius:4px;z-index:1}
+.tag.out{background:var(--ink);text-transform:uppercase}
 .best-card h3{font-size:16px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;max-width:880px;margin:0 auto;position:relative}
@@ -150,6 +152,7 @@ p{margin:0}
 .card-row span{font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .card .btn{font-size:11px;padding-block:9px;border-color:#9a9a9a;background:#F0F0F0}
 .card .btn:hover{background:var(--green);border-color:var(--green)}
+.card-row .sold{color:var(--soft)}
 
 /* product */
 .crumbs{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--muted);padding-top:36px}
@@ -175,6 +178,11 @@ p{margin:0}
 .qty button:hover{background:var(--band)}
 .qty output{min-width:22px;text-align:center;font-variant-numeric:tabular-nums}
 .buy .btn{font-size:16px;min-height:52px}
+.buy .btn:disabled{background:var(--line);color:var(--muted);cursor:not-allowed}
+.qty[aria-disabled]{opacity:.45}
+.qty button:disabled{cursor:not-allowed}
+.stock{margin-top:10px;font-size:14px;font-weight:600;color:var(--green-d)}
+.stock.out{color:#B3261E}
 .notes{margin-top:56px;display:flex;flex-direction:column;gap:20px;font-size:13px;color:var(--muted);max-width:80ch}
 .notes b{font-weight:700;color:#555}
 
@@ -299,30 +307,30 @@ p{margin:0}
 </style>
 </head>
 <body>
-<div class="announce caps">Бесплатна достава над 3.000 МКД</div>
+<div class="announce caps" id="announce"></div>
 
 <header class="hdr">
   <div class="wrap">
-    <div class="lang" aria-label="Јазик">
+    <div class="lang" data-i18n-aria="lang" aria-label="Јазик">
       <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5c2.6 2.8 3.9 6 3.9 9.5s-1.3 6.7-3.9 9.5c-2.6-2.8-3.9-6-3.9-9.5S9.4 5.3 12 2.5Z"/></svg>
-      <b>МК</b><span class="sep">|</span><button type="button" data-en>EN</button>
+      <button type="button" data-lang="mk">МК</button><span class="sep">|</span><button type="button" data-lang="en">EN</button>
     </div>
-    <button class="burger icon-btn" type="button" id="burger" aria-label="Мени" aria-expanded="false">
+    <button class="burger icon-btn" type="button" id="burger" data-i18n-aria="menu" aria-label="Мени" aria-expanded="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
     </button>
-    <nav class="nav" aria-label="Главна навигација">
-      <a href="#home" data-r="home">Почетна</a>
-      <a href="#shop" data-r="shop">Продавница</a>
-      <a href="#home" class="logo" aria-label="Tera – почетна"><img src="img/logo.png" alt="tera"></a>
-      <a href="#contact" data-r="contact">Контакт</a>
-      <a href="#about" data-r="about">За нас</a>
+    <nav class="nav" data-i18n-aria="mainnav" aria-label="Главна навигација">
+      <a href="#home" data-r="home" data-i18n="nav_home">Почетна</a>
+      <a href="#shop" data-r="shop" data-i18n="nav_shop">Продавница</a>
+      <a href="#home" class="logo" data-i18n-aria="home_aria" aria-label="Tera – почетна"><img src="img/logo.png" alt="tera"></a>
+      <a href="#contact" data-r="contact" data-i18n="nav_contact">Контакт</a>
+      <a href="#about" data-r="about" data-i18n="nav_about">За нас</a>
     </nav>
     <div class="icons">
-      <a href="#home" class="logo brand-mid" style="display:none" id="mlogo" aria-label="Tera – почетна"><img src="img/logo.png" alt="tera"></a>
+      <a href="#home" class="logo brand-mid" style="display:none" id="mlogo" data-i18n-aria="home_aria" aria-label="Tera – почетна"><img src="img/logo.png" alt="tera"></a>
       <a class="icon-btn" href="https://www.instagram.com/tera.elements/" target="_blank" rel="noopener" aria-label="Instagram">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>
       </a>
-      <button class="icon-btn" type="button" id="cartBtn" aria-label="Кошничка">
+      <button class="icon-btn" type="button" id="cartBtn" data-i18n-aria="cart" aria-label="Кошничка">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3.5 7.5h17l-1.3 14H4.8L3.5 7.5Z"/><path d="M8.5 7.5V6a3.5 3.5 0 0 1 7 0v1.5"/></svg>
         <span class="badge" id="badge" hidden>0</span>
       </button>
@@ -330,35 +338,35 @@ p{margin:0}
   </div>
   <div class="mnav" id="mnav" hidden>
     <div class="wrap">
-      <a href="#home" data-r="home">Почетна</a>
-      <a href="#shop" data-r="shop">Продавница</a>
-      <a href="#contact" data-r="contact">Контакт</a>
-      <a href="#about" data-r="about">За нас</a>
-      <div class="lang"><b>МК</b><span class="sep">|</span><button type="button" data-en>EN</button></div>
+      <a href="#home" data-r="home" data-i18n="nav_home">Почетна</a>
+      <a href="#shop" data-r="shop" data-i18n="nav_shop">Продавница</a>
+      <a href="#contact" data-r="contact" data-i18n="nav_contact">Контакт</a>
+      <a href="#about" data-r="about" data-i18n="nav_about">За нас</a>
+      <div class="lang"><button type="button" data-lang="mk">МК</button><span class="sep">|</span><button type="button" data-lang="en">EN</button></div>
     </div>
   </div>
 </header>
 
 <main id="app"></main>
 
-<div class="totop"><button type="button" id="toTop">Врати се на почеток
+<div class="totop"><button type="button" id="toTop"><span data-i18n="totop">Врати се на почеток</span>
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 15 6-6 6 6"/></svg></button></div>
 
 <footer class="ftr">
   <div class="wrap">
     <div class="ftr-grid">
-      <div><h4>Tera Elements</h4><p>Современ дизајн. Намерни детали.<br>Безвременско присуство.</p></div>
-      <div><h4>Компанија</h4><ul><li><a href="#about">За Нас</a></li></ul></div>
-      <div><h4>Поддршка</h4><ul><li><a href="#contact">Контактирај нè</a></li></ul></div>
+      <div><h4>Tera Elements</h4><p data-i18n-html="tagline">Современ дизајн. Намерни детали.<br>Безвременско присуство.</p></div>
+      <div><h4 data-i18n="company">Компанија</h4><ul><li><a href="#about" data-i18n="about_us">За Нас</a></li></ul></div>
+      <div><h4 data-i18n="support">Поддршка</h4><ul><li><a href="#contact" data-i18n="contact_us">Контактирај нè</a></li></ul></div>
     </div>
-    <p class="copy">© 2026 Tera Elements. Сите права задржани.</p>
+    <p class="copy" data-i18n="rights">© 2026 Tera Elements. Сите права задржани.</p>
   </div>
 </footer>
 
 <div class="scrim" id="scrim"></div>
-<aside class="drawer" id="drawer" aria-label="Кошничка" aria-hidden="true">
-  <div class="drawer-head"><h2>Кошничка</h2>
-    <button class="x" type="button" id="closeCart" aria-label="Затвори"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+<aside class="drawer" id="drawer" data-i18n-aria="cart" aria-label="Кошничка" aria-hidden="true">
+  <div class="drawer-head"><h2 data-i18n="cart">Кошничка</h2>
+    <button class="x" type="button" id="closeCart" data-i18n-aria="close" aria-label="Затвори"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
   </div>
   <div class="drawer-body" id="cartBody"></div>
 </aside>
@@ -366,76 +374,126 @@ p{margin:0}
 <div class="toast" id="toast" role="status"></div>
 
 <script>
-/* ---------- DATA (edit here; add image URLs to `images` later) ---------- */
-const FREE_SHIPPING = 3000;
+/* ---------- DATA (products come from /api/products – edit them at /admin) ---------- */
+const FREE_SHIPPING = 4000;
 const SHIPPING_FEE = 150; // placeholder – confirm real delivery price
-const BASE = {
-  name:'Нома', subtitle:'Премиум даска за сервирање', price:2500,
-  material:'Орев', dims:'16 x 35 x 2 cm', lead:'14 дена',
-  desc:['Подигнете го нивото на вашето послужување.','Нашата даска од орев се одликува со робустен квалитет и префинет дизајн. Со својата уникатна текстура и впечатлива рачка, таа е идеален подарок за љубителите на храна или совршен додаток за вашиот дом. Издржлива, елегантна и безвременска.'],
-  care:'Се мие рачно со млака вода. За да го зачува сјајот, препорачуваме повремено премачкување со минерално масло или восок за дрво.',
-  images:[] // e.g. ['img/noma-1.jpg','img/noma-2.jpg','img/noma-3.jpg']
-};
-const PRODUCTS = [
-  {...BASE,id:'noma',images:['img/noma-1.jpg','img/noma-2.jpg']},
-  {...BASE,id:'ring',name:'Даска со прстен',dims:'',images:['img/ring-1.jpg','img/ring-2.jpg']}, // temporary name – replace
-  {...BASE,id:'round',name:'Тркалезна даска',dims:'',images:['img/round-1.jpg']}            // temporary name – replace
-];
+let PRODUCTS = [];
 const HERO_IMG = 'img/hero.jpg';
-// which photo each bestseller card shows (index into that product's images)
-const BESTSELLERS = [{id:'noma',img:0},{id:'round',img:0},{id:'ring',img:0}];
 const REVIEWS = [
-  {name:'Теодора',role:'CEO, Brand Owner',text:'Даската е феноменална. Ја искористивме неколку пати до сега, преубаво изгледа. Исто така, многу сме задоволни од квалитетот на дрвото. Ви благодарам.'},
-  {name:'Александра',role:'CEO, Experience App',text:'Од толку што е убава даската, ми стои како декорација во кујната. Жал ми е да ја искористам.'}
+  {name:['Теодора','Teodora'],role:'CEO, Brand Owner',text:['Даската е феноменална. Ја искористивме неколку пати до сега, преубаво изгледа. Исто така, многу сме задоволни од квалитетот на дрвото. Ви благодарам.','The board is phenomenal. We have used it several times so far and it looks beautiful. We are also very happy with the quality of the wood. Thank you.']},
+  {name:['Александра','Aleksandra'],role:'CEO, Experience App',text:['Од толку што е убава даската, ми стои како декорација во кујната. Жал ми е да ја искористам.','The board is so beautiful that I keep it as decoration in my kitchen. I almost feel sorry to use it.']}
 ];
+
+/* ---------- language (MK default, EN optional; choice remembered per browser) ---------- */
+let LANG='mk';
+try{if(localStorage.getItem('tera-lang')==='en')LANG='en'}catch(e){}
+const T={
+  announce:['Бесплатна достава над','Free delivery over'],
+  lang:['Јазик','Language'], menu:['Мени','Menu'], mainnav:['Главна навигација','Main navigation'], home_aria:['Tera – почетна','Tera – home'],
+  nav_home:['Почетна','Home'], nav_shop:['Продавница','Shop'], nav_contact:['Контакт','Contact'], nav_about:['За нас','About'],
+  cart:['Кошничка','Cart'], close:['Затвори','Close'], totop:['Врати се на почеток','Back to top'],
+  tagline:['Современ дизајн. Намерни детали.<br>Безвременско присуство.','Modern design. Intentional details.<br>Timeless presence.'],
+  company:['Компанија','Company'], about_us:['За Нас','About us'], support:['Поддршка','Support'], contact_us:['Контактирај нè','Contact us'],
+  rights:['© 2026 Tera Elements. Сите права задржани.','© 2026 Tera Elements. All rights reserved.'],
+  out:['Нема на залиха','Out of stock'], in_stock:['На залиха','In stock'], only_left:['Само уште {x} на залиха','Only {x} left in stock'],
+  img:['Слика','Image'], img_product:['Слика на производ','Product image'], img1:['Слика 1','Image 1'], show_img:['Прикажи слика','Show image'],
+  cart_empty:['Вашата кошничка е празна.','Your cart is empty.'], to_shop:['Кон продавницата','Go to shop'],
+  material:['Материјал','Material'], dims:['Димензии','Dimensions'], lead:['Рок на испорака','Delivery time'], care:['Одржување','Care'], price:['Цена','Price'],
+  dec:['Намали','Decrease'], inc:['Зголеми','Increase'], remove:['Отстрани','Remove'],
+  ship_left:['Уште {x} до бесплатна достава.','{x} away from free delivery.'], ship_free:['Имате бесплатна достава.','You get free delivery.'],
+  total:['Вкупно','Total'], order_btn:['Нарачај','Checkout'],
+  hero_h:['Сервирај со стил.','Serve in style.'], hero_p:['Премиум даски дизајнирани за Вашите најважни моменти.','Premium boards designed for your most important moments.'],
+  hero_alt:['Тера даска од орев со сирење, грозје и леб','Tera walnut board with cheese, grapes and bread'],
+  discover:['Откријте ја колекцијата','Discover the collection'], best:['Најпродавани','Bestsellers'], view:['Види производ','View product'],
+  steps_h:['3 едноставни чекори до твојата омилена Tera даска','3 simple steps to your favourite Tera board'],
+  s1h:['Избери модел','Choose a model'], s1p:['Разгледај ја понудата и одбери ја даската што најмногу ти одговара.','Browse the collection and pick the board that suits you best.'],
+  s2h:['Направи нарачка','Place an order'], s2p:['Внесете ги деталите за достава на Вашата нова Tera даска.','Enter the delivery details for your new Tera board.'],
+  s3h:['Очекувај достава','Await delivery'], s3p:['Ние ја изработуваме со внимание и ти ја испраќаме директно до врата.','We craft it with care and ship it straight to your door.'],
+  reviews_h:['Што кажуваат<br>нашите среќни клиенти','What our<br>happy customers say'], no_products:['Моментално нема производи.','No products at the moment.'],
+  crumbs:['Патека','Breadcrumb'], boards:['Даски за сервирање','Serving boards'], add:['Додади во кошничка','Add to cart'],
+  note1:['<b>Важна напомена за производот:</b> Tera даските се изработени од 100% природен орев. Бидејќи не постојат две исти дрвја во природата, не постојат ни две исти даски. Вашето парче може благо да се разликува во нијансата и шарите од прикажаната слика, што го прави единствено и само ваше.',
+         '<b>Important product note:</b> Tera boards are made from 100% natural walnut. Just as no two trees in nature are alike, no two boards are alike either. Your piece may differ slightly in tone and grain from the photo, which makes it unique and yours alone.'],
+  note2:['<b>Внимание:</b> Ова е природен производ. За да се зачува неговиот квалитет, НЕ го мијте во машина за садови и не го оставајте потопен во вода. Неправилното одржување може да доведе до виткање или пукање на дрвото, за што не сносиме одговорност.',
+         '<b>Caution:</b> This is a natural product. To preserve its quality, do NOT wash it in a dishwasher or leave it soaking in water. Improper care can cause the wood to warp or crack, for which we cannot be held responsible.'],
+  checkout:['Нарачка','Checkout'], f_name:['Име и презиме','Full name'], f_phone:['Телефон','Phone'], f_email:['Е-пошта','Email'], f_addr:['Адреса','Address'],
+  f_city:['Град','City'], f_zip:['Поштенски број','Postal code'], f_note:['Забелешка (опционално)','Note (optional)'],
+  pay:['Плаќање во готово при достава','Cash on delivery'], confirm:['Потврди нарачка','Place order'], summary:['Преглед на кошничка','Order summary'],
+  subtotal:['Меѓузбир','Subtotal'], delivery:['Достава','Delivery'], free:['Бесплатна','Free'],
+  err_req:['Пополнете го ова поле.','Please fill in this field.'], err_phone:['Внесете валиден телефонски број.','Please enter a valid phone number.'], err_email:['Внесете валидна е-пошта.','Please enter a valid email address.'],
+  thanks:['Ви благодариме!','Thank you!'], thanks_p:['Вашата нарачка е примена. Ќе ве контактираме за потврда.','Your order has been received. We will contact you to confirm it.'], back_shop:['Назад кон продавницата','Back to shop'],
+  contact_p:['Имате прашање за некоја даска или за вашата нарачка? Слободно контактирајте нè.','Have a question about a board or your order? Feel free to get in touch.'],
+  about_p:['Tera Elements. Современ дизајн. Намерни детали. Безвременско присуство.','Tera Elements. Modern design. Intentional details. Timeless presence.'],
+  about_todo:['Тука оди текстот за брендот. Оваа страница не постои во Figma дизајнот, па е оставена како простор за содржина.','The brand story goes here. This page is not in the Figma design, so it is left as a placeholder for content.'],
+  copied:['Копирано: ','Copied: '], load_err:['Производите не можеа да се вчитаат. Обидете се повторно.','Products could not be loaded. Please try again.'],
+};
+const t=(k,x)=>{const s=T[k][LANG==='en'?1:0];return x==null?s:s.replace('{x}',x)};
+const L=a=>a[LANG==='en'?1:0];
+// product text field in the current language; English falls back to Macedonian when empty
+const pf=(p,k)=>(LANG==='en'&&p[k+'_en'])||p[k]||'';
+function applyLang(){
+  document.documentElement.lang=LANG;
+  document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.dataset.i18n));
+  document.querySelectorAll('[data-i18n-html]').forEach(el=>el.innerHTML=t(el.dataset.i18nHtml));
+  document.querySelectorAll('[data-i18n-aria]').forEach(el=>el.setAttribute('aria-label',t(el.dataset.i18nAria)));
+  document.querySelectorAll('[data-lang]').forEach(b=>{b.classList.toggle('on',b.dataset.lang===LANG);b.setAttribute('aria-pressed',b.dataset.lang===LANG)});
+  $('#announce').textContent=t('announce')+' '+fmt(FREE_SHIPPING);
+}
+function setLang(l){LANG=l;try{localStorage.setItem('tera-lang',l)}catch(e){}applyLang();renderView();renderCart()}
 
 /* ---------- helpers ---------- */
 const $ = s=>document.querySelector(s);
-const fmt = n=>n.toLocaleString('de-DE')+' МКД';
+const fmt = n=>LANG==='en'?n.toLocaleString('en-US')+' MKD':n.toLocaleString('de-DE')+' МКД';
 const byId = id=>PRODUCTS.find(p=>p.id===id);
+const inStock = p=>p.in_stock && p.quantity!==0;
+const maxQty = p=>p.quantity==null?99:Math.min(99,p.quantity);
 const ICON_IMG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m3 17 5-5 4 4 3-3 6 6"/></svg>';
 function img(p,i,label,cls=''){
   const src=p&&p.images&&p.images[i];
-  if(src) return `<img src="${src}" alt="${p.name}">`;
-  return `<div class="ph ${cls}">${ICON_IMG}<span>${label||'Слика'}</span></div>`;
+  if(src) return `<img src="${src}" alt="${esc(pf(p,'name'))}">`;
+  return `<div class="ph ${cls}">${ICON_IMG}<span>${label||t('img')}</span></div>`;
 }
 const esc = s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let tt; function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2400)}
+let tt; function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),2400)}
 
 /* ---------- cart ---------- */
 let cart=[];
-try{cart=JSON.parse(localStorage.getItem('tera-cart')||'[]').filter(l=>byId(l.id))}catch(e){cart=[]}
+// drop deleted / sold-out products and cap quantities to what is in stock
+function loadCart(){
+  try{cart=JSON.parse(localStorage.getItem('tera-cart')||'[]')}catch(e){cart=[]}
+  cart=cart.filter(l=>byId(l.id)&&inStock(byId(l.id)));
+  cart.forEach(l=>l.qty=Math.min(l.qty,maxQty(byId(l.id))));
+}
 function save(){try{localStorage.setItem('tera-cart',JSON.stringify(cart))}catch(e){}}
 const count=()=>cart.reduce((a,l)=>a+l.qty,0);
 const subtotal=()=>cart.reduce((a,l)=>a+l.qty*byId(l.id).price,0);
-function add(id,qty){const l=cart.find(x=>x.id===id);if(l)l.qty+=qty;else cart.push({id,qty});save();renderCart();}
-function setQty(id,q){const l=cart.find(x=>x.id===id);if(!l)return;l.qty=Math.max(1,Math.min(99,q));save();renderCart();if(route().name==='checkout')renderView()}
+function add(id,qty){const p=byId(id);if(!p||!inStock(p))return;const l=cart.find(x=>x.id===id);if(l)l.qty=Math.min(l.qty+qty,maxQty(p));else cart.push({id,qty:Math.min(qty,maxQty(p))});save();renderCart();}
+function setQty(id,q){const l=cart.find(x=>x.id===id);if(!l)return;l.qty=Math.max(1,Math.min(maxQty(byId(id)),q));save();renderCart();if(route().name==='checkout')renderView()}
 function remove(id){cart=cart.filter(x=>x.id!==id);save();renderCart();if(route().name==='checkout')renderView()}
 
 function renderCart(){
   const n=count(), b=$('#badge'); b.textContent=n; b.hidden=n===0;
   const body=$('#cartBody');
-  if(!cart.length){body.innerHTML=`<div class="empty"><p>Вашата кошничка е празна.</p><a class="btn btn-dark" href="#shop" data-close>Кон продавницата</a></div>`;return}
+  if(!cart.length){body.innerHTML=`<div class="empty"><p>${t('cart_empty')}</p><a class="btn btn-dark" href="#shop" data-close>${t('to_shop')}</a></div>`;return}
   const st=subtotal(), left=FREE_SHIPPING-st;
   body.innerHTML = cart.map(l=>{const p=byId(l.id);return `
     <div class="line">
-      <div class="media">${img(p,0,'Слика','white')}</div>
+      <div class="media">${img(p,0,t('img'),'white')}</div>
       <div>
-        <h3>${esc(p.name)}</h3><h4>${esc(p.subtitle)}</h4>
-        <div class="meta">Материјал: ${esc(p.material)}${p.dims?`<br>Димензии: ${esc(p.dims)}`:''}</div>
+        <h3>${esc(pf(p,'name'))}</h3><h4>${esc(pf(p,'subtitle'))}</h4>
+        <div class="meta">${t('material')}: ${esc(pf(p,'material'))}${p.dims?`<br>${t('dims')}: ${esc(p.dims)}`:''}</div>
         <div class="lp">${fmt(p.price)}</div>
         <div class="line-ctrl">
-          <div class="qty"><button type="button" data-dec="${p.id}" aria-label="Намали">-</button><output>${l.qty}</output><button type="button" data-inc="${p.id}" aria-label="Зголеми">+</button></div>
-          <button class="rm" type="button" data-rm="${p.id}">Отстрани</button>
+          <div class="qty"><button type="button" data-dec="${p.id}" aria-label="${t('dec')}">-</button><output>${l.qty}</output><button type="button" data-inc="${p.id}" aria-label="${t('inc')}">+</button></div>
+          <button class="rm" type="button" data-rm="${p.id}">${t('remove')}</button>
         </div>
       </div>
     </div>`}).join('') + `
     <div>
-      <div class="ship">${left>0?`Уште ${fmt(left)} до бесплатна достава.`:'Имате бесплатна достава.'}</div>
+      <div class="ship">${left>0?t('ship_left',fmt(left)):t('ship_free')}</div>
       <div class="bar"><i style="width:${Math.min(100,st/FREE_SHIPPING*100)}%"></i></div>
     </div>
-    <div class="sum"><span>Вкупно</span><span>${fmt(st)}</span></div>
-    <a class="btn btn-green btn-block" href="#checkout" data-close>Нарачај</a>`;
+    <div class="sum"><span>${t('total')}</span><span>${fmt(st)}</span></div>
+    <a class="btn btn-green btn-block" href="#checkout" data-close>${t('order_btn')}</a>`;
 }
 function openCart(){$('#drawer').classList.add('open');$('#scrim').classList.add('open');$('#drawer').setAttribute('aria-hidden','false');$('#closeCart').focus()}
 function closeCart(){$('#drawer').classList.remove('open');$('#scrim').classList.remove('open');$('#drawer').setAttribute('aria-hidden','true')}
@@ -452,123 +510,125 @@ const person='<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8
 const VIEWS={
 home:()=>`
   <section class="hero"><div class="wrap">
-    <h1>Сервирај со стил.</h1>
-    <p>Премиум даски дизајнирани за Вашите најважни моменти.</p>
+    <h1>${t('hero_h')}</h1>
+    <p>${t('hero_p')}</p>
   </div>
-  <div class="media hero-img"><img src="${HERO_IMG}" alt="Тера даска од орев со сирење, грозје и леб"></div>
-  <div class="wrap hero-cta"><a class="btn btn-dark" href="#shop">Откријте ја колекцијата</a></div>
+  <div class="media hero-img"><img src="${HERO_IMG}" alt="${t('hero_alt')}"></div>
+  <div class="wrap hero-cta"><a class="btn btn-dark" href="#shop">${t('discover')}</a></div>
   </section>
 
   <section class="band-dark sec"><div class="wrap">
-    <h2 class="sec-title">Најпродавани</h2>
-    <div class="best">${BESTSELLERS.map((b,i)=>{const p=byId(b.id);return `
+    <h2 class="sec-title">${t('best')}</h2>
+    <div class="best">${PRODUCTS.filter(p=>p.featured).slice(0,3).map(p=>`
       <div class="best-card">
-        <a class="media" href="#product-${p.id}"><span class="tag">BESTSELLER</span>${img(p,b.img,'Слика на производ','white')}</a>
-        <h3>${esc(p.name)}</h3>
-        <a class="btn btn-line-dark" href="#product-${p.id}">Види производ</a>
-      </div>`}).join('')}</div>
+        <a class="media" href="#product-${p.id}"><span class="tag">BESTSELLER</span>${img(p,0,t('img_product'),'white')}</a>
+        <h3>${esc(pf(p,'name'))}</h3>
+        <a class="btn btn-line-dark" href="#product-${p.id}">${t('view')}</a>
+      </div>`).join('')}</div>
   </div></section>
 
   <section class="band-grey sec"><div class="wrap">
-    <h2 class="sec-title">3 едноставни чекори до твојата омилена Tera даска</h2>
+    <h2 class="sec-title">${t('steps_h')}</h2>
     <div class="steps">
-      <div class="step"><span class="num">01</span><h3>Избери модел</h3><p>Разгледај ја понудата и одбери ја даската што најмногу ти одговара.</p></div>
-      <div class="step"><span class="num">02</span><h3>Направи нарачка</h3><p>Внесете ги деталите за достава на Вашата нова Tera даска.</p></div>
-      <div class="step"><span class="num">03</span><h3>Очекувај достава</h3><p>Ние ја изработуваме со внимание и ти ја испраќаме директно до врата.</p></div>
+      <div class="step"><span class="num">01</span><h3>${t('s1h')}</h3><p>${t('s1p')}</p></div>
+      <div class="step"><span class="num">02</span><h3>${t('s2h')}</h3><p>${t('s2p')}</p></div>
+      <div class="step"><span class="num">03</span><h3>${t('s3h')}</h3><p>${t('s3p')}</p></div>
     </div>
-    <div class="steps-cta"><a class="btn btn-dark" href="#shop">Откријте ја колекцијата</a></div>
+    <div class="steps-cta"><a class="btn btn-dark" href="#shop">${t('discover')}</a></div>
   </div></section>
 
   <section class="band-dark sec"><div class="wrap">
-    <h2 class="sec-title" style="font-size:20px">Што кажуваат<br>нашите среќни клиенти</h2>
+    <h2 class="sec-title" style="font-size:20px">${t('reviews_h')}</h2>
     <div class="reviews">${REVIEWS.map(r=>`
       <article class="review">
         <div class="review-head">
           <div class="avatar">${person}</div>
-          <div class="review-who"><b>${esc(r.name)}</b><span>${esc(r.role)}</span>
+          <div class="review-who"><b>${esc(L(r.name))}</b><span>${esc(r.role)}</span>
             <div class="stars">${stars.repeat(5)}<span style="margin-left:4px">5.0</span></div></div>
           <div class="quote" aria-hidden="true">“</div>
         </div>
-        <p>${esc(r.text)}</p>
+        <p>${esc(L(r.text))}</p>
       </article>`).join('')}</div>
   </div></section>`,
 
 shop:()=>`
-  <section class="shop"><div class="wrap"><div class="grid">${PRODUCTS.map(p=>`
+  <section class="shop"><div class="wrap">${PRODUCTS.length?'':`<p class="empty">${t('no_products')}</p>`}<div class="grid">${PRODUCTS.map(p=>`
     <div class="card">
-      <a class="media${p.images[1]?' has-alt':''}" href="#product-${p.id}">${img(p,0,'Слика на производ','white')}${p.images[1]?`<img class="alt" src="${p.images[1]}" alt="" loading="lazy">`:''}</a>
-      <div class="card-row"><b>${esc(p.name)}</b><span>${fmt(p.price)}</span></div>
-      <a class="btn btn-line" href="#product-${p.id}">Види производ</a>
+      <a class="media${p.images[1]?' has-alt':''}" href="#product-${p.id}">${inStock(p)?'':`<span class="tag out">${t('out')}</span>`}${img(p,0,t('img_product'),'white')}${p.images[1]?`<img class="alt" src="${p.images[1]}" alt="" loading="lazy">`:''}</a>
+      <div class="card-row"><b>${esc(pf(p,'name'))}</b><span${inStock(p)?'':' class="sold"'}>${fmt(p.price)}</span></div>
+      <a class="btn btn-line" href="#product-${p.id}">${t('view')}</a>
     </div>`).join('')}</div></div></section>`,
 
 product:(r)=>{const p=byId(r.id); if(!p) return VIEWS.shop();
+  const ok=inStock(p);
   return `<div class="wrap">
-  <nav class="crumbs" aria-label="Патека"><a href="#home">Почетна</a><span class="sep">›</span><a href="#shop">Продавница</a><span class="sep">›</span><span>Даски за сервирање</span><span class="sep">›</span><span>${esc(p.name)}</span></nav>
+  <nav class="crumbs" aria-label="${t('crumbs')}"><a href="#home">${t('nav_home')}</a><span class="sep">›</span><a href="#shop">${t('nav_shop')}</a><span class="sep">›</span><span>${t('boards')}</span><span class="sep">›</span><span>${esc(pf(p,'name'))}</span></nav>
   <section class="pdp">
     <div class="gallery">
-      <div class="media main" id="mainImg" data-i="0">${img(p,0,'Слика 1','white')}</div>
-      ${p.images.length>1?`<div class="thumbs">${p.images.slice(1).map((_,k)=>`<button type="button" data-thumb="${k+1}" aria-label="Прикажи слика ${k+2}">${img(p,k+1,'Слика','white')}</button>`).join('')}</div>`:''}
+      <div class="media main" id="mainImg" data-i="0">${img(p,0,t('img1'),'white')}</div>
+      ${p.images.length>1?`<div class="thumbs">${p.images.slice(1).map((_,k)=>`<button type="button" data-thumb="${k+1}" aria-label="${t('show_img')} ${k+2}">${img(p,k+1,t('img'),'white')}</button>`).join('')}</div>`:''}
     </div>
     <div class="info">
-      <h1>${esc(p.name)}</h1>
-      <h2>${esc(p.subtitle)}</h2>
-      <div class="desc">${p.desc.map(esc).join('<br>')}</div>
+      <h1>${esc(pf(p,'name'))}</h1>
+      <h2>${esc(pf(p,'subtitle'))}</h2>
+      <div class="desc">${esc(pf(p,'desc')).replace(/\n/g,'<br>')}</div>
       <div class="specs">
-        <div><b>Материјал:</b> ${esc(p.material)}</div>
-        ${p.dims?`<div><b>Димензии:</b> ${esc(p.dims)}</div>`:''}
-        <div><b>Рок на испорака:</b> ${esc(p.lead)}</div>
-        <div><b>Одржување:</b> ${esc(p.care)}</div>
+        <div><b>${t('material')}:</b> ${esc(pf(p,'material'))}</div>
+        ${p.dims?`<div><b>${t('dims')}:</b> ${esc(p.dims)}</div>`:''}
+        <div><b>${t('lead')}:</b> ${esc(pf(p,'lead'))}</div>
+        <div><b>${t('care')}:</b> ${esc(pf(p,'care'))}</div>
       </div>
-      <div class="price">Цена: ${fmt(p.price)}</div>
+      <div class="price">${t('price')}: ${fmt(p.price)}</div>
+      <div class="stock${ok?'':' out'}">${ok?(p.quantity!=null&&p.quantity<=5?t('only_left',p.quantity):t('in_stock')):t('out')}</div>
       <div class="buy">
-        <div class="qty"><button type="button" id="pDec" aria-label="Намали">-</button><output id="pQty">1</output><button type="button" id="pInc" aria-label="Зголеми">+</button></div>
-        <button class="btn btn-dark" type="button" id="addBtn" data-id="${p.id}">Додади во кошничка</button>
+        <div class="qty"${ok?'':' aria-disabled="true"'}><button type="button" id="pDec" aria-label="${t('dec')}"${ok?'':' disabled'}>-</button><output id="pQty">1</output><button type="button" id="pInc" aria-label="${t('inc')}"${ok?'':' disabled'}>+</button></div>
+        <button class="btn btn-dark" type="button" id="addBtn" data-id="${p.id}"${ok?'':' disabled'}>${ok?t('add'):t('out')}</button>
       </div>
       <div class="notes">
-        <p><b>Важна напомена за производот:</b> Tera даските се изработени од 100% природен орев. Бидејќи не постојат две исти дрвја во природата, не постојат ни две исти даски. Вашето парче може благо да се разликува во нијансата и шарите од прикажаната слика, што го прави единствено и само ваше.</p>
-        <p><b>Внимание:</b> Ова е природен производ. За да се зачува неговиот квалитет, НЕ го мијте во машина за садови и не го оставајте потопен во вода. Неправилното одржување може да доведе до виткање или пукање на дрвото, за што не сносиме одговорност.</p>
+        <p>${t('note1')}</p>
+        <p>${t('note2')}</p>
       </div>
     </div>
   </section></div>`},
 
 checkout:()=>{
-  if(!cart.length) return `<div class="wrap page"><h1>Нарачка</h1><p>Вашата кошничка е празна.</p><a class="btn btn-dark" href="#shop">Кон продавницата</a></div>`;
+  if(!cart.length) return `<div class="wrap page"><h1>${t('checkout')}</h1><p>${t('cart_empty')}</p><a class="btn btn-dark" href="#shop">${t('to_shop')}</a></div>`;
   const st=subtotal(), ship=st>=FREE_SHIPPING?0:SHIPPING_FEE;
   return `<div class="wrap"><section class="co">
     <div>
-      <h1>Нарачка</h1>
+      <h1>${t('checkout')}</h1>
       <form class="form" id="coForm" novalidate>
-        <div class="fld"><label for="f-name">Име и презиме</label><input id="f-name" name="name" required autocomplete="name"><span class="err"></span></div>
-        <div class="fld"><label for="f-phone">Телефон</label><input id="f-phone" name="phone" required inputmode="tel" autocomplete="tel" placeholder="07X XXX XXX"><span class="err"></span></div>
-        <div class="fld full"><label for="f-email">Е-пошта</label><input id="f-email" name="email" type="email" autocomplete="email"><span class="err"></span></div>
-        <div class="fld full"><label for="f-addr">Адреса</label><input id="f-addr" name="addr" required autocomplete="street-address"><span class="err"></span></div>
-        <div class="fld"><label for="f-city">Град</label><input id="f-city" name="city" required autocomplete="address-level2"><span class="err"></span></div>
-        <div class="fld"><label for="f-zip">Поштенски број</label><input id="f-zip" name="zip" inputmode="numeric" autocomplete="postal-code"><span class="err"></span></div>
-        <div class="fld full"><label for="f-note">Забелешка (опционално)</label><textarea id="f-note" name="note" rows="3"></textarea></div>
-        <div class="pay"><span class="dot"></span>Плаќање во готово при достава</div>
-        <div class="fld full"><button class="btn btn-green btn-block" type="submit" style="min-height:50px;font-size:14px">Потврди нарачка</button></div>
+        <div class="fld"><label for="f-name">${t('f_name')}</label><input id="f-name" name="name" required autocomplete="name"><span class="err"></span></div>
+        <div class="fld"><label for="f-phone">${t('f_phone')}</label><input id="f-phone" name="phone" required inputmode="tel" autocomplete="tel" placeholder="07X XXX XXX"><span class="err"></span></div>
+        <div class="fld full"><label for="f-email">${t('f_email')}</label><input id="f-email" name="email" type="email" autocomplete="email"><span class="err"></span></div>
+        <div class="fld full"><label for="f-addr">${t('f_addr')}</label><input id="f-addr" name="addr" required autocomplete="street-address"><span class="err"></span></div>
+        <div class="fld"><label for="f-city">${t('f_city')}</label><input id="f-city" name="city" required autocomplete="address-level2"><span class="err"></span></div>
+        <div class="fld"><label for="f-zip">${t('f_zip')}</label><input id="f-zip" name="zip" inputmode="numeric" autocomplete="postal-code"><span class="err"></span></div>
+        <div class="fld full"><label for="f-note">${t('f_note')}</label><textarea id="f-note" name="note" rows="3"></textarea></div>
+        <div class="pay"><span class="dot"></span>${t('pay')}</div>
+        <div class="fld full"><button class="btn btn-green btn-block" type="submit" style="min-height:50px;font-size:14px">${t('confirm')}</button></div>
       </form>
     </div>
     <aside class="summary">
-      <h2>Преглед на кошничка</h2>
-      ${cart.map(l=>{const p=byId(l.id);return `<div class="sline"><div class="media">${img(p,0,'','white')}</div><div><b>${esc(p.name)}</b><span>${l.qty} × ${fmt(p.price)}</span></div><div>${fmt(p.price*l.qty)}</div></div>`}).join('')}
-      <div class="srow"><span>Меѓузбир</span><span>${fmt(st)}</span></div>
-      <div class="srow"><span>Достава</span><span>${ship?fmt(ship):'Бесплатна'}</span></div>
-      <div class="srow total"><span>Вкупно</span><span>${fmt(st+ship)}</span></div>
+      <h2>${t('summary')}</h2>
+      ${cart.map(l=>{const p=byId(l.id);return `<div class="sline"><div class="media">${img(p,0,'','white')}</div><div><b>${esc(pf(p,'name'))}</b><span>${l.qty} × ${fmt(p.price)}</span></div><div>${fmt(p.price*l.qty)}</div></div>`}).join('')}
+      <div class="srow"><span>${t('subtotal')}</span><span>${fmt(st)}</span></div>
+      <div class="srow"><span>${t('delivery')}</span><span>${ship?fmt(ship):t('free')}</span></div>
+      <div class="srow total"><span>${t('total')}</span><span>${fmt(st+ship)}</span></div>
     </aside>
   </section></div>`},
 
-contact:()=>`<div class="wrap page"><h1>Контакт</h1>
-  <p>Имате прашање за некоја даска или за вашата нарачка? Слободно контактирајте нè.</p>
+contact:()=>`<div class="wrap page"><h1>${t('nav_contact')}</h1>
+  <p>${t('contact_p')}</p>
   <div class="contact-list">
-    <div><b>Е-пошта</b><span class="cval"><a href="mailto:elements.tera@gmail.com">elements.tera@gmail.com</a></span></div>
-    <div><b>Телефон</b><span class="cval"><a href="tel:+38970913115">+389 70 913 115</a></span></div>
+    <div><b>${t('f_email')}</b><span class="cval"><a href="mailto:elements.tera@gmail.com">elements.tera@gmail.com</a></span></div>
+    <div><b>${t('f_phone')}</b><span class="cval"><a href="tel:+38970913115">+389 70 913 115</a></span></div>
     <div><b>Instagram</b><span class="cval"><a href="https://www.instagram.com/tera.elements/" target="_blank" rel="noopener">@tera.elements</a></span></div>
   </div></div>`,
 
-about:()=>`<div class="wrap page"><h1>За нас</h1>
-  <p>Tera Elements. Современ дизајн. Намерни детали. Безвременско присуство.</p>
-  <p class="todo">Тука оди текстот за брендот. Оваа страница не постои во Figma дизајнот, па е оставена како простор за содржина.</p></div>`,
+about:()=>`<div class="wrap page"><h1>${t('nav_about')}</h1>
+  <p>${t('about_p')}</p>
+  <p class="todo">${t('about_todo')}</p></div>`,
 };
 
 function renderView(){
@@ -581,8 +641,9 @@ function renderView(){
 function bindProduct(){
   let q=1; const out=$('#pQty');
   $('#pDec').onclick=()=>{q=Math.max(1,q-1);out.textContent=q};
-  $('#pInc').onclick=()=>{q=Math.min(99,q+1);out.textContent=q};
-  $('#addBtn').onclick=e=>{add(e.currentTarget.dataset.id,q);openCart()};
+  const p=byId(route().id);
+  $('#pInc').onclick=()=>{q=Math.min(maxQty(p),q+1);out.textContent=q};
+  $('#addBtn').onclick=()=>{if(!inStock(p))return;add(p.id,q);openCart()};
   document.querySelectorAll('[data-thumb]').forEach(b=>b.onclick=()=>{
     const main=$('#mainImg'); const tmp=main.innerHTML; main.innerHTML=b.innerHTML; b.innerHTML=tmp;
   });
@@ -593,9 +654,9 @@ function bindCheckout(){
     e.preventDefault(); let ok=true;
     f.querySelectorAll('.fld').forEach(d=>{const i=d.querySelector('input');const er=d.querySelector('.err');if(!i||!er)return;
       let m='';
-      if(i.required&&!i.value.trim()) m='Пополнете го ова поле.';
-      else if(i.name==='phone'&&i.value.replace(/\D/g,'').length<8) m='Внесете валиден телефонски број.';
-      else if(i.type==='email'&&i.value&&!/^\S+@\S+\.\S+$/.test(i.value)) m='Внесете валидна е-пошта.';
+      if(i.required&&!i.value.trim()) m=t('err_req');
+      else if(i.name==='phone'&&i.value.replace(/\D/g,'').length<8) m=t('err_phone');
+      else if(i.type==='email'&&i.value&&!/^\S+@\S+\.\S+$/.test(i.value)) m=t('err_email');
       er.textContent=m; if(m){ok=false}});
     if(!ok){f.querySelector('.err:not(:empty)')?.previousElementSibling?.focus();return}
     cart=[];save();renderCart();showDone();
@@ -604,21 +665,21 @@ function bindCheckout(){
 function showDone(){
   const m=document.createElement('div');m.className='modal';m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');
   m.innerHTML=`<div class="modal-card"><div class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
-    <h3>Ви благодариме!</h3><p>Вашата нарачка е примена. Ќе ве контактираме за потврда.</p>
-    <a class="btn btn-dark" href="#shop" id="doneBtn">Назад кон продавницата</a></div>`;
+    <h3>${t('thanks')}</h3><p>${t('thanks_p')}</p>
+    <a class="btn btn-dark" href="#shop" id="doneBtn">${t('back_shop')}</a></div>`;
   document.body.appendChild(m); $('#doneBtn').focus();
   $('#doneBtn').onclick=()=>m.remove();
 }
 
 /* ---------- global events ---------- */
 document.addEventListener('click',e=>{
-  const t=e.target.closest('button,a'); if(!t) return;
-  if(t.dataset.inc){const l=cart.find(x=>x.id===t.dataset.inc);setQty(l.id,l.qty+1)}
-  if(t.dataset.dec){const l=cart.find(x=>x.id===t.dataset.dec);setQty(l.id,l.qty-1)}
-  if(t.dataset.rm) remove(t.dataset.rm);
-  if(t.hasAttribute('data-close')) closeCart();
-  if(t.hasAttribute('data-en')) toast('Англиската верзија наскоро.');
-  if(t.dataset.copy){const v=t.dataset.copy;try{navigator.clipboard.writeText(v).then(()=>toast('Копирано: '+v),()=>toast(v))}catch(err){toast(v)}}
+  const el=e.target.closest('button,a'); if(!el) return;
+  if(el.dataset.inc){const l=cart.find(x=>x.id===el.dataset.inc);setQty(l.id,l.qty+1)}
+  if(el.dataset.dec){const l=cart.find(x=>x.id===el.dataset.dec);setQty(l.id,l.qty-1)}
+  if(el.dataset.rm) remove(el.dataset.rm);
+  if(el.hasAttribute('data-close')) closeCart();
+  if(el.dataset.lang&&el.dataset.lang!==LANG){setLang(el.dataset.lang);$('#mnav').hidden=true}
+  if(el.dataset.copy){const v=el.dataset.copy;try{navigator.clipboard.writeText(v).then(()=>toast(t('copied')+v),()=>toast(v))}catch(err){toast(v)}}
 });
 $('#cartBtn').onclick=openCart;
 $('#closeCart').onclick=closeCart;
@@ -630,7 +691,18 @@ const mq=matchMedia('(max-width:860px)');
 function syncLogo(){$('#mlogo').style.display=mq.matches?'':'none'}
 mq.addEventListener('change',syncLogo);syncLogo();
 window.addEventListener('hashchange',()=>{$('#mnav').hidden=true;renderView();window.scrollTo({top:0})});
-renderView();renderCart();
+async function init(){
+  applyLang();
+  try{
+    const r=await fetch('/api/products',{cache:'no-store'});
+    if(!r.ok) throw new Error(r.status);
+    PRODUCTS=await r.json();
+  }catch(e){
+    $('#app').innerHTML=`<div class="wrap page"><p>${t('load_err')}</p></div>`;
+  }
+  loadCart();renderView();renderCart();
+}
+init();
 </script>
 
 </body>

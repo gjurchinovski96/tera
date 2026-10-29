@@ -1,0 +1,4 @@
+config.json
+data/*.tmp
+__pycache__/
+.claude/

@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="mk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Tera Admin</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap">
+<style>
+/* Admin for Tera Elements: product list (drag to reorder) on the left, editor on the right. Uses the site's green/ink palette. */
+:root{
+  --green:#8A9A48; --green-d:#76863A; --ink:#141414; --bg:#F5F5F5; --paper:#fff;
+  --muted:#6F6F6F; --soft:#9A9A9A; --line:#DEDEDE; --band:#EDEDED; --red:#B3261E; --red-bg:#FCEDEC;
+  --ok-bg:#EEF2E1; --overlay:rgba(20,20,20,.45);
+  --f:"Montserrat",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:14px;line-height:1.5}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+h1,h2,h3{margin:0}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;border-radius:6px;padding:10px 18px;border:1px solid transparent;transition:background .15s,border-color .15s,color .15s;white-space:nowrap}
+.btn-dark{background:var(--ink);color:var(--paper)}.btn-dark:hover{background:#333}
+.btn-green{background:var(--green);color:var(--paper)}.btn-green:hover{background:var(--green-d)}
+.btn-line{border-color:var(--line);background:var(--paper)}.btn-line:hover{border-color:var(--ink)}
+.btn-danger{color:var(--red);border-color:#EBC5C2;background:var(--paper)}.btn-danger:hover{background:var(--red-bg)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* login */
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.login form{background:var(--paper);border-radius:14px;padding:36px 32px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:16px;box-shadow:0 10px 40px rgba(0,0,0,.06)}
+.login img{height:34px;align-self:center}
+.login h1{font-size:15px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-align:center;color:var(--muted)}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:5;background:var(--ink);color:var(--paper)}
+.top .in{max-width:1280px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:16px}
+.top img{height:24px;filter:invert(1)}
+.top .ttl{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#bbb;flex:1}
+.top a,.top button{font-size:12px;color:#ddd}.top a:hover,.top button:hover{color:var(--paper);text-decoration:underline}
+
+.layout{max-width:1280px;margin:0 auto;padding:24px 16px 80px;display:grid;grid-template-columns:360px minmax(0,1fr);gap:24px;align-items:start}
+.panel{background:var(--paper);border-radius:12px;padding:18px}
+.panel-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.panel-h h2{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.hint{font-size:12px;color:var(--soft)}
+
+/* product list */
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.row{display:grid;grid-template-columns:18px 48px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px;border-radius:8px;border:1px solid transparent;cursor:pointer;background:var(--paper)}
+.row:hover{background:var(--bg)}
+.row.on{border-color:var(--ink);background:var(--bg)}
+.row.drag{opacity:.4}
+.row.over{box-shadow:0 -2px 0 var(--green)}
+.grip{cursor:grab;color:var(--soft);display:flex}.grip svg{width:16px;height:16px}
+.thumb{width:48px;height:48px;border-radius:6px;background:var(--band);overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.row b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row small{color:var(--muted);font-variant-numeric:tabular-nums}
+.pill{font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:var(--ok-bg);color:var(--green-d);white-space:nowrap}
+.pill.out{background:var(--red-bg);color:var(--red)}
+.mv{display:flex;flex-direction:column}
+.mv button{font-size:10px;line-height:1;padding:2px 4px;color:var(--soft)}.mv button:hover{color:var(--ink)}
+
+/* editor */
+.ed h2{font-size:22px;font-weight:600}
+.ed .sub{color:var(--muted);font-size:12px;margin-top:2px}
+.ed .sub a{color:var(--green-d);text-decoration:underline}
+.sec{border-top:1px solid var(--band);margin-top:20px;padding-top:20px}
+.sec h3{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fld{display:flex;flex-direction:column;gap:5px;min-width:0}
+.fld.full{grid-column:1/-1}
+.fld label{font-size:12px;font-weight:600}
+.fld .help{font-size:11px;color:var(--soft)}
+.fld input,.fld textarea{padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--paper);width:100%}
+.fld input:focus,.fld textarea:focus{border-color:var(--ink);outline:none}
+.fld textarea{resize:vertical;min-height:90px}
+.money{position:relative}.money input{padding-right:54px}.money span{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--soft);font-size:12px}
+
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;padding:3px;gap:3px;background:var(--bg)}
+.seg button{padding:8px 14px;border-radius:6px;font-size:12px;font-weight:600}
+.seg button[aria-pressed=true]{background:var(--paper);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.seg button[data-v=in][aria-pressed=true]{color:var(--green-d)}
+.seg button[data-v=out][aria-pressed=true]{color:var(--red)}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13px}
+.check input{width:18px;height:18px;margin:1px 0 0;accent-color:var(--green)}
+
+.imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.im{position:relative;aspect-ratio:1/1;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--bg)}
+.im img{width:100%;height:100%;object-fit:cover;display:block}
+.im .badge{position:absolute;top:6px;left:6px;font-size:10px;font-weight:600;background:var(--ink);color:var(--paper);padding:2px 7px;border-radius:4px}
+.im .tools{position:absolute;inset:auto 0 0 0;display:flex;justify-content:space-between;padding:6px;background:linear-gradient(transparent,rgba(0,0,0,.55))}
+.im .tools button{width:26px;height:26px;border-radius:6px;background:rgba(255,255,255,.92);font-size:13px;display:flex;align-items:center;justify-content:center}
+.im .tools button:hover{background:var(--paper)}
+.im .tools button:disabled{opacity:.35}
+.im .tools .del{color:var(--red)}
+.addimg{aspect-ratio:1/1;border:1.5px dashed var(--line);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:8px}
+.addimg .btn{width:100%;padding-inline:8px;font-size:11px}
+
+.actions{position:sticky;bottom:0;background:var(--paper);display:flex;gap:10px;align-items:center;margin:20px -18px -18px;padding:14px 18px;border-top:1px solid var(--band);border-radius:0 0 12px 12px}
+.actions .sp{flex:1;font-size:12px;color:var(--muted)}
+.actions .dirty{color:var(--red);font-weight:600}
+.err{color:var(--red);font-size:13px;font-weight:500}
+.empty{color:var(--muted);text-align:center;padding:60px 16px}
+
+/* picker */
+.modal{position:fixed;inset:0;z-index:20;background:var(--overlay);display:flex;align-items:center;justify-content:center;padding:16px}
+.modal .card{background:var(--paper);border-radius:12px;width:100%;max-width:720px;max-height:85vh;display:flex;flex-direction:column}
+.modal .card > div:first-child{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--band)}
+.modal .card h3{font-size:14px;font-weight:700}
+.pick{overflow:auto;padding:18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
+.pick button{aspect-ratio:1/1;border-radius:8px;overflow:hidden;border:2px solid transparent;padding:0;position:relative}
+.pick button:hover{border-color:var(--green)}
+.pick button[disabled]{opacity:.35;cursor:default;border-color:transparent}
+.pick img{width:100%;height:100%;object-fit:cover;display:block}
+.pick span{position:absolute;left:0;right:0;bottom:0;font-size:10px;background:rgba(255,255,255,.88);padding:2px 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--ink);color:var(--paper);padding:11px 18px;border-radius:8px;font-size:13px;z-index:30;opacity:0;pointer-events:none;transition:.2s;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.bad{background:var(--red)}
+
+@media (max-width:900px){.layout{grid-template-columns:1fr}}
+@media (max-width:560px){.grid2{grid-template-columns:1fr}.actions{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+
+<section class="login" id="login" hidden>
+  <form id="loginForm">
+    <img src="/img/logo.png" alt="tera">
+    <h1>Админ панел</h1>
+    <div class="fld"><label for="pw">Лозинка</label><input id="pw" type="password" autocomplete="current-password" required autofocus></div>
+    <div class="err" id="loginErr" role="alert"></div>
+    <button class="btn btn-dark" type="submit">Најава</button>
+  </form>
+</section>
+
+<div id="appView" hidden>
+  <header class="top"><div class="in">
+    <img src="/img/logo.png" alt="tera"><span class="ttl">Админ · Производи</span>
+    <a href="/#shop" target="_blank" rel="noopener">Види продавница ↗</a>
+    <button type="button" id="logout">Одјава</button>
+  </div></header>
+  <main class="layout">
+    <section class="panel">
+      <div class="panel-h"><h2>Производи</h2><button class="btn btn-green" type="button" id="newBtn">+ Нов</button></div>
+      <p class="hint" style="margin:0 0 10px">Повлечете за да го смените редоследот во продавницата.</p>
+      <ul class="list" id="list"></ul>
+    </section>
+    <section class="panel ed" id="editor"></section>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=n=>Number(n).toLocaleString('de-DE')+' МКД';
+const inStock=p=>p.in_stock&&p.quantity!==0;
+let tt;function toast(m,bad){const t=$('#toast');t.textContent=m;t.classList.toggle('bad',!!bad);t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2600)}
+
+async function api(path,opt={}){
+  const r=await fetch(path,{...opt,headers:{'Content-Type':'application/json'},body:opt.body&&JSON.stringify(opt.body)});
+  const data=await r.json().catch(()=>({}));
+  if(r.status===401&&!path.endsWith('/login')){showLogin();throw new Error('Најавата истече.')}
+  if(!r.ok) throw new Error(data.error||'Грешка '+r.status);
+  return data;
+}
+
+/* ---------- state ---------- */
+let products=[], sel=null, draft=null, dirty=false;
+const BLANK={name:'',subtitle:'Премиум даска за сервирање',price:'',desc:'',material:'Орев',dims:'',lead:'14 дена',care:'',in_stock:true,quantity:null,featured:false,images:[],
+  name_en:'',subtitle_en:'Premium serving board',desc_en:'',material_en:'Walnut',lead_en:'14 days',care_en:''};
+
+/* ---------- auth ---------- */
+function showLogin(){$('#appView').hidden=true;$('#login').hidden=false;$('#pw').focus()}
+$('#loginForm').onsubmit=async e=>{
+  e.preventDefault();$('#loginErr').textContent='';
+  try{await api('/api/admin/login',{method:'POST',body:{password:$('#pw').value}});$('#pw').value='';start()}
+  catch(err){$('#loginErr').textContent=err.message==='Wrong password'?'Погрешна лозинка.':err.message}
+};
+$('#logout').onclick=async()=>{if(!confirmLeave())return;await api('/api/admin/logout',{method:'POST',body:{}});dirty=false;showLogin()};
+
+async function start(){
+  $('#login').hidden=true;$('#appView').hidden=false;
+  products=await api('/api/products');
+  renderList();
+  select(products[0]?.id??null);
+}
+
+/* ---------- list ---------- */
+const GRIP='<svg viewBox="0 0 16 16" fill="currentColor"><circle cx="5" cy="3" r="1.3"/><circle cx="11" cy="3" r="1.3"/><circle cx="5" cy="8" r="1.3"/><circle cx="11" cy="8" r="1.3"/><circle cx="5" cy="13" r="1.3"/><circle cx="11" cy="13" r="1.3"/></svg>';
+function stockLabel(p){return inStock(p)?(p.quantity==null?'На залиха':p.quantity+' на залиха'):'Нема'}
+function renderList(){
+  $('#list').innerHTML=products.map((p,i)=>`
+    <li class="row${p.id===sel?' on':''}" draggable="true" data-id="${p.id}">
+      <span class="grip" aria-hidden="true">${GRIP}</span>
+      <span class="thumb">${p.images[0]?`<img src="/${esc(p.images[0])}" alt="">`:''}</span>
+      <span style="min-width:0"><b>${esc(p.name)}</b><small>${fmt(p.price)}</small></span>
+      <span style="display:flex;align-items:center;gap:6px"><span class="pill${inStock(p)?'':' out'}">${stockLabel(p)}</span>
+        <span class="mv"><button type="button" data-up="${i}" aria-label="Нагоре"${i?'':' disabled'}>▲</button><button type="button" data-down="${i}" aria-label="Надолу"${i<products.length-1?'':' disabled'}>▼</button></span></span>
+    </li>`).join('')||'<li class="hint">Нема производи.</li>';
+}
+$('#list').addEventListener('click',e=>{
+  const up=e.target.closest('[data-up]'),down=e.target.closest('[data-down]');
+  if(up){move(+up.dataset.up,+up.dataset.up-1);return}
+  if(down){move(+down.dataset.down,+down.dataset.down+1);return}
+  const row=e.target.closest('.row');if(row&&row.dataset.id!==sel&&confirmLeave())select(row.dataset.id);
+});
+let dragId=null;
+$('#list').addEventListener('dragstart',e=>{const r=e.target.closest('.row');if(!r)return;dragId=r.dataset.id;r.classList.add('drag');e.dataTransfer.effectAllowed='move'});
+$('#list').addEventListener('dragend',()=>{dragId=null;document.querySelectorAll('.row').forEach(r=>r.classList.remove('drag','over'))});
+$('#list').addEventListener('dragover',e=>{const r=e.target.closest('.row');if(!r||!dragId)return;e.preventDefault();document.querySelectorAll('.row.over').forEach(x=>x.classList.remove('over'));r.classList.add('over')});
+$('#list').addEventListener('drop',e=>{const r=e.target.closest('.row');if(!r||!dragId)return;e.preventDefault();
+  const from=products.findIndex(p=>p.id===dragId),to=products.findIndex(p=>p.id===r.dataset.id);move(from,to)});
+async function move(from,to){
+  if(from===to||to<0||to>=products.length)return;
+  const prev=products.slice();const [p]=products.splice(from,1);products.splice(to,0,p);renderList();
+  try{await api('/api/admin/order',{method:'PUT',body:{ids:products.map(p=>p.id)}});toast('Редоследот е зачуван.')}
+  catch(err){products=prev;renderList();toast(err.message,true)}
+}
+
+/* ---------- editor ---------- */
+function confirmLeave(){return !dirty||confirm('Имате незачувани промени. Да се отфрлат?')}
+window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
+function select(id){
+  sel=id;dirty=false;
+  const p=products.find(x=>x.id===id);
+  draft=p?structuredClone(p):(id==='__new'?structuredClone(BLANK):null);
+  renderList();renderEditor();
+}
+$('#newBtn').onclick=()=>{if(confirmLeave()){select('__new');$('#f-name').focus()}};
+
+function renderEditor(){
+  const ed=$('#editor');
+  if(!draft){ed.innerHTML='<div class="empty">Изберете производ од листата или додадете нов.</div>';return}
+  const d=draft,isNew=sel==='__new';
+  ed.innerHTML=`
+    <h2>${isNew?'Нов производ':esc(d.name)}</h2>
+    <p class="sub">${isNew?'Пополнете ги полињата и зачувајте.':`ID: ${esc(d.id)} · <a href="/#product-${esc(d.id)}" target="_blank" rel="noopener">Види на сајтот ↗</a>`}</p>
+    <form id="edForm" novalidate>
+    <div class="sec" style="border:0;margin-top:12px;padding-top:0"><div class="grid2">
+      <div class="fld"><label for="f-name">Име</label><input id="f-name" name="name" value="${esc(d.name)}" required></div>
+      <div class="fld"><label for="f-price">Цена</label><div class="money"><input id="f-price" name="price" type="number" min="0" step="10" inputmode="numeric" value="${esc(d.price)}" required><span>МКД</span></div></div>
+      <div class="fld full"><label for="f-subtitle">Поднаслов</label><input id="f-subtitle" name="subtitle" value="${esc(d.subtitle)}"></div>
+      <div class="fld full"><label for="f-desc">Опис</label><textarea id="f-desc" name="desc" rows="5">${esc(d.desc)}</textarea><span class="help">Секој нов ред е посебен ред на страницата.</span></div>
+    </div></div>
+
+    <div class="sec"><h3>Достапност</h3>
+      <div class="grid2" style="align-items:end">
+        <div class="fld"><label>Статус</label><div class="seg" role="group" aria-label="Статус">
+          <button type="button" data-v="in" aria-pressed="${d.in_stock}">На залиха</button>
+          <button type="button" data-v="out" aria-pressed="${!d.in_stock}">Нема на залиха</button></div></div>
+        <div class="fld"><label for="f-qty">Количина на залиха</label><input id="f-qty" name="quantity" type="number" min="0" step="1" inputmode="numeric" value="${d.quantity??''}" placeholder="Неограничено"${d.in_stock?'':' disabled'}>
+          <span class="help">Празно = не се следи. 0 = распродадено.</span></div>
+      </div>
+      <label class="check" style="margin-top:14px"><input type="checkbox" name="featured"${d.featured?' checked':''}><span>Прикажи во „Најпродавани“ на почетната <span class="hint">(првите 3 по редослед)</span></span></label>
+    </div>
+
+    <div class="sec"><h3>Слики</h3>
+      <div class="imgs" id="imgs"></div>
+      <p class="hint" style="margin-top:8px">Првата слика е главна; втората се прикажува при поминување со глушецот во продавницата.</p>
+    </div>
+
+    <div class="sec"><h3>Детали</h3><div class="grid2">
+      <div class="fld"><label for="f-material">Материјал</label><input id="f-material" name="material" value="${esc(d.material)}"></div>
+      <div class="fld"><label for="f-dims">Димензии</label><input id="f-dims" name="dims" value="${esc(d.dims)}" placeholder="16 x 35 x 2 cm"></div>
+      <div class="fld"><label for="f-lead">Рок на испорака</label><input id="f-lead" name="lead" value="${esc(d.lead)}"></div>
+      <div class="fld full"><label for="f-care">Одржување</label><textarea id="f-care" name="care" rows="3">${esc(d.care)}</textarea></div>
+    </div></div>
+
+    <div class="sec"><h3>Англиска верзија (EN)</h3>
+      <p class="hint" style="margin:-4px 0 12px">Се прикажува кога посетителот ќе избере EN. Празно поле = се користи македонскиот текст.</p>
+      <div class="grid2">
+      <div class="fld"><label for="f-name_en">Име (EN)</label><input id="f-name_en" name="name_en" value="${esc(d.name_en)}" placeholder="${esc(d.name)}"></div>
+      <div class="fld"><label for="f-subtitle_en">Поднаслов (EN)</label><input id="f-subtitle_en" name="subtitle_en" value="${esc(d.subtitle_en)}"></div>
+      <div class="fld full"><label for="f-desc_en">Опис (EN)</label><textarea id="f-desc_en" name="desc_en" rows="5">${esc(d.desc_en)}</textarea></div>
+      <div class="fld"><label for="f-material_en">Материјал (EN)</label><input id="f-material_en" name="material_en" value="${esc(d.material_en)}"></div>
+      <div class="fld"><label for="f-lead_en">Рок на испорака (EN)</label><input id="f-lead_en" name="lead_en" value="${esc(d.lead_en)}"></div>
+      <div class="fld full"><label for="f-care_en">Одржување (EN)</label><textarea id="f-care_en" name="care_en" rows="3">${esc(d.care_en)}</textarea></div>
+    </div></div>
+
+    <div class="actions">
+      <span class="sp" id="status"></span>
+      ${isNew?'':'<button class="btn btn-danger" type="button" id="delBtn">Избриши</button>'}
+      <button class="btn btn-line" type="button" id="cancelBtn">Откажи</button>
+      <button class="btn btn-dark" type="submit" id="saveBtn">${isNew?'Додади производ':'Зачувај'}</button>
+    </div>
+    </form>`;
+  renderImgs();setDirty(dirty);
+  const f=$('#edForm');
+  f.addEventListener('input',e=>{const n=e.target.name;if(!n)return;
+    draft[n]=e.target.type==='checkbox'?e.target.checked:e.target.value;
+    if(n==='name'&&!isNew)ed.querySelector('h2').textContent=e.target.value||'—';
+    setDirty(true)});
+  f.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{
+    draft.in_stock=b.dataset.v==='in';
+    f.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+    $('#f-qty').disabled=!draft.in_stock;setDirty(true)});
+  f.onsubmit=e=>{e.preventDefault();saveDraft()};
+  $('#cancelBtn').onclick=()=>{dirty=false;select(isNew?(products[0]?.id??null):sel)};
+  if(!isNew)$('#delBtn').onclick=delProduct;
+}
+function setDirty(v){dirty=v;const s=$('#status');if(s){s.textContent=v?'Незачувани промени':'';s.className='sp'+(v?' dirty':'')}}
+
+function renderImgs(){
+  const im=draft.images,n=im.length;
+  $('#imgs').innerHTML=im.map((src,i)=>`
+    <div class="im"><img src="/${esc(src)}" alt="">${i===0?'<span class="badge">Главна</span>':''}
+      <div class="tools"><span style="display:flex;gap:4px"><button type="button" data-il="${i}" aria-label="Лево"${i?'':' disabled'}>←</button><button type="button" data-ir="${i}" aria-label="Десно"${i<n-1?'':' disabled'}>→</button></span>
+      <button type="button" class="del" data-ix="${i}" aria-label="Отстрани слика">✕</button></div></div>`).join('')+`
+    <div class="addimg">
+      <label class="btn btn-dark" tabindex="0">Прикачи<input type="file" accept="image/jpeg,image/png,image/webp" multiple hidden id="upl"></label>
+      <button class="btn btn-line" type="button" id="pickBtn">Од img/</button>
+    </div>`;
+  $('#imgs').onclick=e=>{const b=e.target.closest('button');if(!b)return;
+    const a=draft.images;
+    if(b.dataset.il){const i=+b.dataset.il;[a[i-1],a[i]]=[a[i],a[i-1]]}
+    else if(b.dataset.ir){const i=+b.dataset.ir;[a[i+1],a[i]]=[a[i],a[i+1]]}
+    else if(b.dataset.ix){a.splice(+b.dataset.ix,1)}
+    else if(b.id==='pickBtn'){openPicker();return}
+    else return;
+    setDirty(true);renderImgs()};
+  $('#upl').onchange=e=>upload([...e.target.files]);
+}
+async function upload(files){
+  for(const file of files){
+    try{
+      const data=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file)});
+      const out=await api('/api/admin/upload',{method:'POST',body:{name:file.name,data}});
+      draft.images.push(out.path);setDirty(true);
+    }catch(err){toast(file.name+': '+err.message,true)}
+  }
+  renderImgs();
+}
+async function openPicker(){
+  let files;try{files=await api('/api/admin/images')}catch(err){toast(err.message,true);return}
+  const m=document.createElement('div');m.className='modal';m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');
+  m.innerHTML=`<div class="card"><div><h3>Избери слика од img/</h3><button class="btn btn-line" type="button" data-close>Затвори</button></div>
+    <div class="pick">${files.map(f=>`<button type="button" data-f="${esc(f)}"${draft.images.includes(f)?' disabled title="Веќе е додадена"':''}><img src="/${esc(f)}" alt="" loading="lazy"><span>${esc(f.slice(4))}</span></button>`).join('')||'<p class="hint">Нема слики.</p>'}</div></div>`;
+  const close=()=>{m.remove();document.removeEventListener('keydown',onKey)};
+  const onKey=e=>{if(e.key==='Escape')close()};
+  m.onclick=e=>{if(e.target===m||e.target.closest('[data-close]'))return close();
+    const b=e.target.closest('[data-f]');if(b&&!b.disabled){draft.images.push(b.dataset.f);setDirty(true);renderImgs();close()}};
+  document.addEventListener('keydown',onKey);document.body.appendChild(m);m.querySelector('[data-close]').focus();
+}
+
+async function saveDraft(){
+  const isNew=sel==='__new';
+  if(!String(draft.name).trim()){toast('Внесете име.',true);$('#f-name').focus();return}
+  if(draft.price===''||draft.price==null||+draft.price<0){toast('Внесете валидна цена.',true);$('#f-price').focus();return}
+  const body={...draft,price:+draft.price,quantity:draft.quantity===''||draft.quantity==null?null:+draft.quantity};
+  $('#saveBtn').disabled=true;
+  try{
+    const saved=await api(isNew?'/api/admin/products':'/api/admin/products/'+sel,{method:isNew?'POST':'PUT',body});
+    if(isNew)products.push(saved);else products[products.findIndex(p=>p.id===sel)]=saved;
+    dirty=false;select(saved.id);toast(isNew?'Производот е додаден.':'Промените се зачувани.');
+  }catch(err){toast(err.message,true)}
+  finally{const b=$('#saveBtn');if(b)b.disabled=false}
+}
+async function delProduct(){
+  if(!confirm(`Да се избрише „${draft.name}“? Ова не може да се врати.`))return;
+  try{
+    await api('/api/admin/products/'+sel,{method:'DELETE'});
+    products=products.filter(p=>p.id!==sel);dirty=false;select(products[0]?.id??null);toast('Производот е избришан.');
+  }catch(err){toast(err.message,true)}
+}
+
+/* ---------- boot ---------- */
+api('/api/admin/me').then(r=>r.admin?start():showLogin()).catch(showLogin);
+</script>
+</body>
+</html>
